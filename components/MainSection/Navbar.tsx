@@ -1,0 +1,175 @@
+import {
+  Heart,
+  HouseIcon,
+  InboxIcon,
+  ShoppingCart,
+  SparklesIcon,
+  UserRound,
+  ZapIcon,
+} from "lucide-react";
+
+import Logo from "@/app/assets/LOGO HISTORA.png";
+import UserMenu from "@/components/navbar-components/user-menu";
+import { Button } from "@/components/ui/button";
+import {
+  NavigationMenu,
+  NavigationMenuItem,
+  NavigationMenuLink,
+  NavigationMenuList,
+} from "@/components/ui/navigation-menu";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import Image from "next/image";
+
+// Navigation links array
+const navigationLinks = [
+  { href: "#", label: "Home" },
+  { href: "#", label: "Collections" },
+  { href: "#", label: "New Arrivals" },
+];
+
+export default function Component() {
+  return (
+    <header className="fixed top-0 left-0 right-0 border-b px-4 md:px-6 z-50 bg-white/80 backdrop-blur">
+      <div className="flex h-16 items-center justify-between gap-4">
+        {/* Left side */}
+        <div className="flex flex-1 items-center gap-2">
+          {/* Mobile menu trigger */}
+          <Popover>
+            <PopoverTrigger asChild>
+              <Button
+                className="group size-8 md:hidden"
+                size="icon"
+                variant="ghost"
+              >
+                <svg
+                  className="pointer-events-none"
+                  fill="none"
+                  height={16}
+                  stroke="currentColor"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  viewBox="0 0 24 24"
+                  width={16}
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    className="-translate-y-[7px] origin-center transition-all duration-300 ease-[cubic-bezier(.5,.85,.25,1.1)] group-aria-expanded:translate-x-0 group-aria-expanded:translate-y-0 group-aria-expanded:rotate-315"
+                    d="M4 12L20 12"
+                  />
+                  <path
+                    className="origin-center transition-all duration-300 ease-[cubic-bezier(.5,.85,.25,1.8)] group-aria-expanded:rotate-45"
+                    d="M4 12H20"
+                  />
+                  <path
+                    className="origin-center translate-y-[7px] transition-all duration-300 ease-[cubic-bezier(.5,.85,.25,1.1)] group-aria-expanded:translate-y-0 group-aria-expanded:rotate-135"
+                    d="M4 12H20"
+                  />
+                </svg>
+              </Button>
+            </PopoverTrigger>
+            <PopoverContent align="start" className="w-36 p-1 md:hidden">
+              <NavigationMenu className="max-w-none *:w-full">
+                <NavigationMenuList className="flex-col items-start gap-0 md:gap-2">
+                  {navigationLinks.map((link) => {
+                    return (
+                      <NavigationMenuItem className="w-full" key={link.label}>
+                        <NavigationMenuLink
+                          className="flex-row items-center gap-2 py-1.5 hover:text-[#f56464] font-medium text-foreground hover:bg-white"
+                          href={link.href}
+                        >
+                          <span>{link.label}</span>
+                        </NavigationMenuLink>
+                      </NavigationMenuItem>
+                    );
+                  })}
+                </NavigationMenuList>
+              </NavigationMenu>
+            </PopoverContent>
+          </Popover>
+
+          <NavigationMenu className="max-md:hidden">
+            <NavigationMenuList className="gap-2">
+              {navigationLinks.map((link) => {
+                return (
+                  <NavigationMenuItem key={link.label}>
+                    <NavigationMenuLink
+                      className="flex-row items-center gap-2 py-1.5 hover:text-[#f56464] font-medium text-foreground hover:bg-white"
+                      href={link.href}
+                    >
+                      <span>{link.label}</span>
+                    </NavigationMenuLink>
+                  </NavigationMenuItem>
+                );
+              })}
+            </NavigationMenuList>
+          </NavigationMenu>
+        </div>
+
+        {/* Middle side: Logo */}
+        <div className="flex items-center">
+          <Image
+            alt="Histora Logo"
+            height={100}
+            src={Logo}
+            width={100}
+            className=" cursor-pointer "
+          />
+        </div>
+
+        {/* Right side: Actions */}
+        <div className="flex flex-1 items-center justify-end gap-4">
+          <Button
+            className="
+    h-auto rounded-full bg-black p-2 text-white
+    transition-all duration-300 ease-out
+    hover:bg-[#f56464]
+    hover:scale-110
+    hover:-translate-y-1
+    hover:rotate-6
+    active:scale-95
+    cursor-pointer
+  "
+          >
+            <Heart />
+          </Button>
+          {/* User menu */}
+          <Button
+            className="
+    h-auto rounded-full bg-black p-2 text-white
+    transition-all duration-300 ease-out
+    hover:bg-[#f56464]
+    hover:scale-110
+    hover:-translate-y-1
+    hover:rotate-6
+    active:scale-95
+    cursor-pointer
+  "
+            variant="ghost"
+          >
+            <UserRound />
+          </Button>
+          {/* Upgrade button */}
+          <Button
+            className="
+    h-auto rounded-full bg-black p-2 text-white
+    transition-all duration-300 ease-out
+    hover:bg-[#f56464]
+    hover:scale-110
+    hover:-translate-y-1
+    hover:rotate-6
+    active:scale-95
+    cursor-pointer
+  "
+          >
+            <ShoppingCart />
+          </Button>
+        </div>
+      </div>
+    </header>
+  );
+}
