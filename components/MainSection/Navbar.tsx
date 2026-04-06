@@ -8,7 +8,7 @@ import {
   ZapIcon,
 } from "lucide-react";
 
-import Logo from "@/app/assets/LOGO HISTORA.png";
+import Logo from "@/app/assets/LOGO.png";
 import UserMenu from "@/components/navbar-components/user-menu";
 import { Button } from "@/components/ui/button";
 import {
@@ -114,9 +114,9 @@ export default function Component() {
         <div className="flex items-center">
           <Image
             alt="Histora Logo"
-            height={100}
+            height={80}
             src={Logo}
-            width={100}
+            width={80}
             className=" cursor-pointer "
           />
         </div>
