@@ -26,14 +26,14 @@ import Image from "next/image";
 
 // Navigation links array
 const navigationLinks = [
-  { href: "#", label: "Home" },
-  { href: "#", label: "Collections" },
-  { href: "#", label: "New Arrivals" },
+  { href: "/", label: "Home" },
+  { href: "/collections", label: "Collections" },
+  { href: "/#new_arrivals", label: "New Arrivals" },
 ];
 
 export default function Component() {
   return (
-    <header className="fixed top-0 left-0 right-0 border-b px-4 md:px-6 z-50 bg-white/80 backdrop-blur">
+    <header className="fixed top-0 left-0 right-0 border-b px-4 md:px-6 z-50 backdrop-blur">
       <div className="flex h-16 items-center justify-between gap-4">
         {/* Left side */}
         <div className="flex flex-1 items-center gap-2">
