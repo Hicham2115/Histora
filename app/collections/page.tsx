@@ -19,6 +19,7 @@ import img2 from "@/app/assets/ffff.jpeg";
 import img3 from "@/app/assets/Heren Casual Slogan Print Losse Ronde Hals Korte Mouw T-shirt.jpeg";
 import img4 from "@/app/assets/K-GLORY Men's Casual Versatile Simple Graphic Print Short Sleeve T-ShirtI discovered amazing products on SHEIN_com, come check them out!.jpeg";
 import img5 from "@/app/assets/Men's Round Neck Short Sleeve Figure Printed Minimalist T-Shirt, Casual Everyday Wear.jpeg";
+import { useRouter } from "next/navigation";
 
 const sairaStencil = Saira_Stencil_One({ subsets: ["latin"], weight: "400" });
 
@@ -86,6 +87,7 @@ export default function Collections() {
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
   const [inStockOnly, setInStockOnly] = useState(false);
   const [selectedColors, setSelectedColors] = useState<string[]>([]);
+  const router = useRouter();
 
   // toggle helpers
   const toggle = (value: string, list: string[], setList: any) => {
@@ -230,8 +232,11 @@ export default function Collections() {
         {/* GRID */}
         <div className="grid grid-cols-3 gap-8">
           {filteredProducts.map((product) => (
-            <div key={product.id}>
-              <div className="bg-gray-100 overflow-hidden">
+            <div
+              key={product.id}
+              onClick={() => router.push(`/collections/${product.id}`)}
+            >
+              <div className="bg-gray-100 overflow-hidden cursor-pointer">
                 <Image
                   src={product.image}
                   alt={product.name}
