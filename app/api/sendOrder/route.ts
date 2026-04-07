@@ -1,9 +1,17 @@
 import { Resend } from "resend";
 
-const resend = new Resend(process.env.RESEND_API_KEY!);
+function getResendClient() {
+  const apiKey = process.env.RESEND_API_KEY;
+  if (!apiKey) {
+    throw new Error("Missing RESEND_API_KEY environment variable");
+  }
+
+  return new Resend(apiKey);
+}
 
 export async function POST(req: Request) {
   try {
+    const resend = getResendClient();
     const data = await req.json();
 
     await resend.emails.send({
@@ -35,8 +43,9 @@ export async function POST(req: Request) {
 
     return new Response(JSON.stringify({ success: true }), { status: 200 });
   } catch (err) {
-    console.error(err);
-    return new Response(JSON.stringify({ success: false, error: err }), {
+    const message = err instanceof Error ? err.message : "Unknown error";
+    console.error(message);
+    return new Response(JSON.stringify({ success: false, error: message }), {
       status: 500,
     });
   }
