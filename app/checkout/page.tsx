@@ -35,6 +35,7 @@ export default function CheckoutPage() {
   const [postalCode, setPostalCode] = useState("");
 
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
 
   const handleNext = async () => {
     const newErrors: { [key: string]: string } = {};
@@ -72,9 +73,11 @@ export default function CheckoutPage() {
       });
 
       const result = await response.json();
-      if (result.success)
-        toast.success("Order placed successfully! We will contact you soon.");
-      else toast.error("Failed to send order. Please try again.");
+      if (result.success) {
+        setShowSuccessModal(true);
+      } else {
+        toast.error("Failed to send order. Please try again.");
+      }
     } catch (err) {
       console.error(err);
       toast.error("An error occurred. Please try again.");
@@ -116,7 +119,7 @@ export default function CheckoutPage() {
           throw new Error("Invalid product id in cart.");
         }
 
-        console.log("Saving item", { ...item, productId });
+        // console.log("Saving item", { ...item, productId });
 
         return {
           order_id: order.id,
@@ -149,6 +152,48 @@ export default function CheckoutPage() {
 
   return (
     <div className="min-h-screen bg-[#f2f1ef] px-6 md:px-16 py-10">
+      {showSuccessModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 px-4">
+          <div className="w-full max-w-md rounded-lg bg-white p-6 shadow-lg">
+            <div className="flex items-start justify-between gap-4">
+              <div>
+                <p className="text-xs uppercase tracking-[0.2em] text-stone-400">
+                  Order confirmed
+                </p>
+                <h2 className="mt-2 text-lg font-medium text-stone-900">
+                  Order placed successfully
+                </h2>
+              </div>
+              <button
+                type="button"
+                onClick={() => setShowSuccessModal(false)}
+                className="text-stone-400 hover:text-stone-700"
+                aria-label="Close"
+              >
+                ✕
+              </button>
+            </div>
+            <p className="mt-3 text-sm text-stone-600">
+              Thanks for your order. We will contact you soon.
+            </p>
+            <div className="mt-6 flex gap-3">
+              <button
+                type="button"
+                onClick={() => setShowSuccessModal(false)}
+                className="flex-1 rounded border border-stone-200 px-4 py-2 text-xs font-medium uppercase tracking-[0.2em] text-stone-700 hover:border-stone-400"
+              >
+                Continue
+              </button>
+              <Link
+                href="/collections"
+                className="flex-1 rounded bg-stone-900 px-4 py-2 text-center text-xs font-medium uppercase tracking-[0.2em] text-white hover:bg-stone-800"
+              >
+                Shop more
+              </Link>
+            </div>
+          </div>
+        </div>
+      )}
       <div className="max-w-5xl mx-auto">
         <Link
           href="/collections"

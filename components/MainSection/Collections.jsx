@@ -1,14 +1,10 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { Saira_Stencil_One, Noto_Sans } from "next/font/google";
 import Image from "next/image";
-
-import img3 from "@/app/assets/b1ef2751e0f770c18e14bc30f1512734.jpg";
-import img4 from "@/app/assets/1cd1182eb97fa3347fb70ec1306b857c.jpg";
-import img5 from "@/app/assets/55f3c564692998cb42c31d358d75eb06.jpg";
-import img6 from "@/app/assets/1bb3a0d6b5a6ac7f0266bc0673a0df6d.jpg";
 import { ArrowDown } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { supabase } from "@/lib/supabase";
 
 const sairaStencil = Saira_Stencil_One({ subsets: ["latin"], weight: "400" });
 const notoSans = Noto_Sans({
@@ -16,47 +12,17 @@ const notoSans = Noto_Sans({
   weight: ["300", "400", "600"],
 });
 
-const products = [
-  {
-    id: 1,
-    category: "V-Neck T-Shirt",
-    name: "Embroidered Seersucker Shirt",
-    price: 99,
-    swatches: [],
-    swatchCount: 0,
-    image: img3,
-  },
-  {
-    id: 2,
-    category: "Cotton T Shirt",
-    name: "Basic Slim Fit T-Shirt",
-    price: 99,
-    swatches: ["#e8e8e0", "#1a1a1a", "#c4b5a0", "#8b7355", "#d4c5b0"],
-    swatchCount: 5,
-    image: img4,
-  },
-  {
-    id: 3,
-    category: "Henley T-Shirt",
-    name: "Blurred Print T-Shirt",
-    price: 99,
-    swatches: ["#d4cdb8", "#2c2c2c", "#8b8575"],
-    swatchCount: 3,
-    image: img5,
-  },
-  {
-    id: 4,
-    category: "Crewneck T-Shirt",
-    name: "Full Sleeve Zipper",
-    price: 99,
-    swatches: ["#f0ead8", "#3d3d3d"],
-    swatchCount: 2,
-    image: img6,
-  },
-];
+const normalizeList = (value) => {
+  if (!value) return [];
+  return value
+    .split(",")
+    .map((v) => v.trim())
+    .filter(Boolean);
+};
 
 function ProductCard({ product, index }) {
   const [hovered, setHovered] = useState(false);
+  const router = useRouter();
 
   return (
     <div
@@ -67,14 +33,20 @@ function ProductCard({ product, index }) {
       <div
         className="relative bg-[#eceef2] overflow-hidden cursor-pointer"
         style={{ aspectRatio: "4/4" }}
+         onClick={() => {
+            router.push(`/collections/${product.id}`);
+          }}
         onMouseEnter={() => setHovered(true)}
         onMouseLeave={() => setHovered(false)}
       >
         {/* Placeholder silhouette (replace with actual Image component) */}
         <div className="absolute inset-0 flex items-center justify-center">
           <Image
-            src={product.image}
-            alt={product.name}
+            src={product.image || ""}
+            alt={product.name || "Product"}
+            width={640}
+            height={640}
+            unoptimized
             className="object-cover w-full h-full"
           />
         </div>
@@ -139,10 +111,50 @@ function ProductCard({ product, index }) {
 
 function Collections() {
   const [page, setPage] = useState(0);
-  const totalCount = 50;
   const itemsPerPage = 4;
-  const totalPages = Math.ceil(totalCount / itemsPerPage);
+  const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
   const router = useRouter();
+
+  useEffect(() => {
+    const loadProducts = async () => {
+      setLoading(true);
+      const { data, error } = await supabase
+        .from("products")
+        .select("id, name, price, image, category, color")
+        .order("id", { ascending: true });
+
+      if (error) {
+        console.error(error);
+        setProducts([]);
+      } else {
+        setProducts(
+          (data ?? []).map((item) => {
+            const swatches = normalizeList(item.color);
+            return {
+              id: item.id,
+              category: item.category ?? "",
+              name: item.name ?? "",
+              price: item.price ?? 0,
+              swatches,
+              swatchCount: swatches.length,
+              image: item.image ?? "",
+            };
+          }),
+        );
+      }
+
+      setLoading(false);
+    };
+
+    loadProducts();
+  }, []);
+
+  const totalPages = Math.max(1, Math.ceil(products.length / itemsPerPage));
+  const visibleProducts = useMemo(() => {
+    const start = page * itemsPerPage;
+    return products.slice(start, start + itemsPerPage);
+  }, [page, products]);
 
   return (
     <section
@@ -193,9 +205,20 @@ function Collections() {
       </div>
       {/* Product grid */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
-        {products.map((product, i) => (
-          <ProductCard key={product.id} product={product} index={i} />
-        ))}
+        {loading
+          ? Array.from({ length: itemsPerPage }).map((_, i) => (
+              <div key={i} className="animate-pulse">
+                <div className="bg-stone-100" style={{ aspectRatio: "4/4" }} />
+                <div className="mt-3 space-y-2">
+                  <div className="h-3 w-24 bg-stone-100" />
+                  <div className="h-4 w-32 bg-stone-100" />
+                  <div className="h-4 w-16 bg-stone-100" />
+                </div>
+              </div>
+            ))
+          : visibleProducts.map((product, i) => (
+              <ProductCard key={product.id} product={product} index={i} />
+            ))}
       </div>
       {/* Pagination */}
       <div className="flex justify-center items-center gap-3 mt-12">

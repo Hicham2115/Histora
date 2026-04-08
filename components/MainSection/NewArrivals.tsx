@@ -6,6 +6,7 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { supabase } from "@/lib/supabase";
 import { Skeleton } from "@/components/ui/skeleton";
+import router from "next/dist/shared/lib/router/router";
 
 const sairaStencil = Saira_Stencil_One({ subsets: ["latin"], weight: "400" });
 const notoSans = Noto_Sans({
@@ -24,12 +25,16 @@ type Product = {
 
 function ProductCard({ product }: { product: Product }) {
   const [hovered, setHovered] = useState(false);
+  const router = useRouter();
 
   return (
     <div className="flex flex-col gap-3">
       <div
         className="relative bg-[#eceef2] overflow-hidden cursor-pointer"
         style={{ aspectRatio: "1/1" }}
+        onClick={() => {
+          router.push(`/collections/${product.id}`);
+        }}
         onMouseEnter={() => setHovered(true)}
         onMouseLeave={() => setHovered(false)}
       >
@@ -102,7 +107,7 @@ function NewArrivals() {
         .from("products")
         .select("id, name, price, description, image, category");
 
-      console.log(data);
+      // console.log("Supabase response:", { data, error });
 
       if (error) {
         setError("Failed to load products");
@@ -161,14 +166,14 @@ function NewArrivals() {
         <button
           onClick={() => setPage((p) => Math.max(0, p - 1))}
           disabled={page === 0}
-          className="w-10 h-10 border disabled:opacity-30"
+          className="w-10 h-10 border border-stone-300 bg-white flex items-center justify-center text-stone-600 hover:border-stone-800 hover:bg-stone-800 hover:text-white disabled:opacity-30 disabled:cursor-not-allowed transition-all duration-200"
         >
           ‹
         </button>
         <button
           onClick={() => setPage((p) => Math.min(totalPages - 1, p + 1))}
           disabled={page === totalPages - 1}
-          className="w-10 h-10 border disabled:opacity-30"
+          className="w-10 h-10 border border-stone-300 bg-white flex items-center justify-center text-stone-600 hover:border-stone-800 hover:bg-stone-800 hover:text-white disabled:opacity-30 disabled:cursor-not-allowed transition-all duration-200  "
         >
           ›
         </button>

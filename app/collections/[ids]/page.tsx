@@ -1,14 +1,10 @@
 "use client";
 import { useParams } from "next/navigation";
-import Image, { StaticImageData } from "next/image";
-import { useState } from "react";
+import Image from "next/image";
+import { useEffect, useMemo, useState } from "react";
 import { useStore } from "@/components/store/useStore";
-
-import img1 from "@/app/assets/Better Days Ahead Tee - Black _ M.jpeg";
-import img2 from "@/app/assets/ffff.jpeg";
-import img3 from "@/app/assets/Heren Casual Slogan Print Losse Ronde Hals Korte Mouw T-shirt.jpeg";
-import img4 from "@/app/assets/K-GLORY Men's Casual Versatile Simple Graphic Print Short Sleeve T-ShirtI discovered amazing products on SHEIN_com, come check them out!.jpeg";
-import img5 from "@/app/assets/Men's Round Neck Short Sleeve Figure Printed Minimalist T-Shirt, Casual Everyday Wear.jpeg";
+import { supabase } from "@/lib/supabase";
+import { toast } from "sonner";
 
 const ALL_SIZES = ["XS", "S", "M", "L", "XL", "2X"];
 
@@ -20,86 +16,104 @@ const COLOR_MAP: Record<string, string> = {
   Gray: "#8a8a8a",
 };
 
-const products = [
-  {
-    id: 1,
-    name: "Basic Slim Fit T-Shirt",
-    price: 199,
-    images: [img1],
-    sizes: ["S", "M"],
-    category: "T-SHIRTS",
-    inStock: true,
-    colors: ["Green"],
-    description:
-      "Relaxed-fit shirt. Camp collar and short sleeves. Button-up front.",
-  },
-  {
-    id: 2,
-    name: "Heavy Weight T-Shirt",
-    price: 199,
-    images: [img2],
-    sizes: ["L", "XL"],
-    category: "T-SHIRTS",
-    inStock: false,
-    colors: ["Blanc"],
-    description:
-      "Premium heavyweight cotton. Boxy silhouette with drop shoulders.",
-  },
-  {
-    id: 3,
-    name: "Full Sleeve Zipper",
-    price: 199,
-    images: [img3],
-    sizes: ["M", "L"],
-    category: "JACKETS",
-    inStock: true,
-    colors: ["Yellow"],
-    description:
-      "Oversized zip-up jacket. Ribbed cuffs and hem. Front zip closure.",
-  },
-  {
-    id: 4,
-    name: "Graphic Print T-Shirt",
-    price: 199,
-    images: [img4],
-    sizes: ["S", "M"],
-    category: "T-SHIRTS",
-    inStock: true,
-    colors: ["Black"],
-    description:
-      "Bold graphic print. Crew neck. Regular fit with short sleeves.",
-  },
-  {
-    id: 5,
-    name: "Minimalist T-Shirt",
-    price: 199,
-    images: [img5],
-    sizes: ["L", "XL"],
-    category: "T-SHIRTS",
-    inStock: false,
-    colors: ["Yellow"],
-    description:
-      "Clean minimalist design. Soft cotton blend. Relaxed everyday fit.",
-  },
-];
+type Product = {
+  id: number;
+  name: string | null;
+  price: number | null;
+  description: string | null;
+  image: string | null;
+  color: string | null;
+  size: string | null;
+  category: string | null;
+  in_stock: string | null;
+};
+
+const normalizeList = (value: string | null) => {
+  if (!value) return [] as string[];
+  return value
+    .split(",")
+    .map((v) => v.trim())
+    .filter(Boolean);
+};
+
+const isInStockValue = (value: string | null) => {
+  if (!value) return false;
+  return ["true", "yes", "1", "in_stock", "in stock"].includes(
+    value.toLowerCase(),
+  );
+};
 
 export default function ProductPage() {
   const params = useParams();
   const rawId = params.ids;
-  const product = products.find((p) => p.id === Number(rawId));
+  const [product, setProduct] = useState<Product | null>(null);
+  const [loading, setLoading] = useState(true);
 
   const [activeImage, setActiveImage] = useState(0);
-  const [selectedSize, setSelectedSize] = useState<string | null>(
-    product?.sizes[0] ?? null,
-  );
-  const [selectedColor, setSelectedColor] = useState<string | null>(
-    product?.colors[0] ?? null,
-  );
+  const [selectedSize, setSelectedSize] = useState<string | null>(null);
+  const [selectedColor, setSelectedColor] = useState<string | null>(null);
   const [quantity, setQuantity] = useState(1);
   const wishlist = useStore((state) => state.wishlist);
   const addToWishlist = useStore((state) => state.addToWishlist);
   const removeFromWishlist = useStore((state) => state.removeFromWishlist);
   const addToCart = useStore((state) => state.addToCart);
+
+  useEffect(() => {
+    const loadProduct = async () => {
+      const productId = Number(rawId);
+      if (!Number.isFinite(productId)) {
+        setProduct(null);
+        setLoading(false);
+        return;
+      }
+
+      setLoading(true);
+      const { data, error } = await supabase
+        .from("products")
+        .select(
+          "id, name, price, description, image, color, size, category, in_stock",
+        )
+        .eq("id", productId)
+        .single();
+
+      if (error) {
+        console.error(error);
+        setProduct(null);
+      } else {
+        setProduct(data as Product);
+      }
+
+      setLoading(false);
+    };
+
+    loadProduct();
+  }, [rawId]);
+
+  useEffect(() => {
+    if (!product) return;
+    const sizes = normalizeList(product.size);
+    const colors = normalizeList(product.color);
+    setSelectedSize((prev) => prev ?? sizes[0] ?? null);
+    setSelectedColor((prev) => prev ?? colors[0] ?? null);
+  }, [product]);
+
+  const productSizes = useMemo(
+    () => normalizeList(product?.size ?? null),
+    [product],
+  );
+  const productColors = useMemo(
+    () => normalizeList(product?.color ?? null),
+    [product],
+  );
+  const inStock = isInStockValue(product?.in_stock ?? null);
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <p className="text-gray-500">Loading product...</p>
+      </div>
+    );
+  }
 
   if (!product) {
     return (
@@ -111,27 +125,24 @@ export default function ProductPage() {
 
   const isWishlisted = wishlist.some((item) => item.id === product.id);
 
-  const thumbnails: StaticImageData[] =
-    product.images.length > 1
-      ? product.images
-      : [
-          product.images[0],
-          product.images[0],
-          product.images[0],
-          product.images[0],
-        ];
+  const thumbnails = product.image
+    ? [product.image, product.image, product.image, product.image]
+    : [];
 
   return (
     <div className="min-h-screen  p-8 mt-16">
       <div className="max-w-5xl mx-auto grid grid-cols-[1fr_100px_360px] gap-6 items-start">
         {/* Main image */}
         <div className=" rounded overflow-hidden aspect-[4/5] relative">
-          <Image
-            src={product.images[0]}
-            alt={product.name}
-            fill
-            className="object-cover"
-          />
+          {product.image && (
+            <Image
+              src={product.image}
+              alt={product.name || "Product"}
+              fill
+              unoptimized
+              className="object-cover"
+            />
+          )}
         </div>
 
         {/* Thumbnail strip */}
@@ -146,9 +157,10 @@ export default function ProductPage() {
             >
               <Image
                 src={img}
-                alt={`${product.name} view ${i + 1}`}
+                alt={`${product.name || "Product"} view ${i + 1}`}
                 width={100}
                 height={100}
+                unoptimized
                 className="w-full h-full object-cover"
               />
             </button>
@@ -164,9 +176,9 @@ export default function ProductPage() {
                 ? removeFromWishlist(product.id)
                 : addToWishlist({
                     id: product.id,
-                    name: product.name,
-                    price: product.price,
-                    image: product.images[0].src,
+                    name: product.name || "",
+                    price: product.price || 0,
+                    image: product.image || "",
                     quantity,
                   })
             }
@@ -202,7 +214,7 @@ export default function ProductPage() {
             Color
           </p>
           <div className="flex gap-2 mb-6">
-            {product.colors.map((color) => (
+            {productColors.map((color) => (
               <button
                 key={color}
                 onClick={() => setSelectedColor(color)}
@@ -225,7 +237,7 @@ export default function ProductPage() {
           </p>
           <div className="flex flex-wrap gap-2 mb-3">
             {ALL_SIZES.map((size) => {
-              const available = product.sizes.includes(size);
+              const available = productSizes.includes(size);
               return (
                 <button
                   key={size}
@@ -287,21 +299,22 @@ export default function ProductPage() {
           {/* Add button */}
           <button
             type="button"
-            onClick={() =>
+            onClick={() => {
               addToCart({
                 id: product.id,
-                name: product.name,
-                price: product.price,
-                image: product.images[0].src,
+                name: product.name || "",
+                price: product.price || 0,
+                image: product.image || "",
                 quantity,
                 size: selectedSize ?? null,
                 color: selectedColor ?? null,
-              })
-            }
+              });
+              toast.success("Added to cart");
+            }}
             className={`w-full py-4 rounded text-xs font-medium tracking-widest uppercase transition-all cursor-pointer bg-black text-white`}
-            disabled={!product.inStock}
+            disabled={!inStock}
           >
-            {product.inStock ? "Add" : "Out of stock"}
+            {inStock ? "Add" : "Out of stock"}
           </button>
         </div>
       </div>

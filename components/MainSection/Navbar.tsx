@@ -4,6 +4,7 @@ import {
   Heart,
   HouseIcon,
   InboxIcon,
+  Pin,
   ShoppingCart,
   SparklesIcon,
   Trash2,
@@ -40,6 +41,7 @@ export default function Component() {
   const wishlist = useStore((state) => state.wishlist);
   const removeFromWishlist = useStore((state) => state.removeFromWishlist);
   const cart = useStore((state) => state.cart);
+  const removeFromCart = useStore((state) => state.removeFromCart);
   const cartCount = cart.reduce((sum, item) => sum + item.quantity, 0);
   const cartTotal = cart.reduce(
     (sum, item) => sum + item.price * item.quantity,
@@ -262,9 +264,19 @@ export default function Component() {
                           {item.quantity} × ${item.price}
                         </p>
                       </div>
-                      <p className="text-xs text-stone-600">
-                        ${(item.price * item.quantity).toFixed(2)}
-                      </p>
+                      <div className="flex items-center gap-2">
+                        <p className="text-xs text-stone-600">
+                          ${(item.price * item.quantity).toFixed(2)}
+                        </p>
+                        <button
+                          type="button"
+                          onClick={() => removeFromCart(item.id)}
+                          className="text-stone-400 hover:text-[#f56464] transition-colors"
+                          aria-label="Remove from cart"
+                        >
+                          <Trash2 size={16} />
+                        </button>
+                      </div>
                     </div>
                   ))}
                 </div>
