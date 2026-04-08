@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import Image from "next/image";
 import {
   Saira_Stencil_One,
@@ -14,80 +14,108 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 
-import img1 from "@/app/assets/Better Days Ahead Tee - Black _ M.jpeg";
-import img2 from "@/app/assets/ffff.jpeg";
-import img3 from "@/app/assets/Heren Casual Slogan Print Losse Ronde Hals Korte Mouw T-shirt.jpeg";
-import img4 from "@/app/assets/K-GLORY Men's Casual Versatile Simple Graphic Print Short Sleeve T-ShirtI discovered amazing products on SHEIN_com, come check them out!.jpeg";
-import img5 from "@/app/assets/Men's Round Neck Short Sleeve Figure Printed Minimalist T-Shirt, Casual Everyday Wear.jpeg";
 import { useRouter } from "next/navigation";
+import { supabase } from "@/lib/supabase";
 
 const sairaStencil = Saira_Stencil_One({ subsets: ["latin"], weight: "400" });
 
-const sizesList = ["S", "M", "L", "XL"];
-const categoriesList = ["T-SHIRTS", "JACKETS", "MUGS", "WALL ART", "HOODIES"];
-
-const products = [
-  {
-    id: 1,
-    name: "Basic Slim Fit T-Shirt",
-    price: 199,
-    image: img1,
-    sizes: ["S", "M"],
-    category: "T-SHIRTS",
-    inStock: true,
-    colors: ["Green"],
-  },
-  {
-    id: 2,
-    name: "Heavy Weight T-Shirt",
-    price: 199,
-    image: img2,
-    sizes: ["L", "XL"],
-    category: "T-SHIRTS",
-    inStock: false,
-    colors: ["Balnc"],
-  },
-  {
-    id: 3,
-    name: "Full Sleeve Zipper",
-    price: 199,
-    image: img3,
-    sizes: ["M", "L"],
-    category: "JACKETS",
-    inStock: true,
-    colors: ["Yellow"],
-  },
-  {
-    id: 4,
-    name: "Graphic Print T-Shirt",
-    price: 199,
-    image: img4,
-    sizes: ["S", "M"],
-    category: "T-SHIRTS",
-    inStock: true,
-    colors: ["Black"],
-  },
-  {
-    id: 5,
-    name: "Minimalist T-Shirt",
-    price: 199,
-    image: img5,
-    sizes: ["L", "XL"],
-    category: "T-SHIRTS",
-    inStock: false,
-    colors: ["Yellow"],
-  },
-];
-
-const colorsList = Array.from(new Set(products.flatMap((p) => p.colors || [])));
+type Product = {
+  id: number;
+  name: string | null;
+  price: number | null;
+  description: string | null;
+  image: string | null;
+  color: string | null;
+  size: string | null;
+  category: string | null;
+  in_stock: string | null;
+};
 
 export default function Collections() {
+  const [products, setProducts] = useState<Product[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [loadError, setLoadError] = useState<string | null>(null);
   const [search, setSearch] = useState("");
   const [selectedSizes, setSelectedSizes] = useState<string[]>([]);
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
   const [inStockOnly, setInStockOnly] = useState(false);
   const [selectedColors, setSelectedColors] = useState<string[]>([]);
   const router = useRouter();
+
+  useEffect(() => {
+    const loadProducts = async () => {
+      setLoading(true);
+      setLoadError(null);
+      const { data, error } = await supabase
+        .from("products")
+        .select(
+          "id, name, price, description, image, color, size, category, in_stock",
+        )
+        .order("id", { ascending: true });
+
+      if (error) {
+        console.error(error);
+        setLoadError("Failed to load products.");
+        setProducts([]);
+      } else {
+        setProducts((data ?? []) as Product[]);
+      }
+
+      setLoading(false);
+    };
+
+    loadProducts();
+  }, []);
+
+  const normalizeList = (value: string | null) => {
+    if (!value) return [] as string[];
+    return value
+      .split(",")
+      .map((v) => v.trim())
+      .filter(Boolean);
+  };
+
+  const sizesList = useMemo(
+    () => Array.from(new Set(products.flatMap((p) => normalizeList(p.size)))),
+    [products],
+  );
+
+  const colorsList = [
+    "White",
+    "Black",
+    "Gray",
+    "Red",
+    "Blue",
+    "Green",
+    "Yellow",
+    "Pink",
+    "Purple",
+    "Orange",
+    "Brown",
+    "Beige",
+    "Navy",
+    "Turquoise",
+    "Maroon",
+  ];
+
+  const categoriesList = [
+    "T-Shirts",
+
+    "Hoodies / Sweatshirts",
+    "Sweaters / Pullovers",
+
+    "Jeans",
+    "Trousers / Pants",
+
+    "Sweatpants / Joggers",
+  ];
+
+  const isInStock = (value: string | null) => {
+    if (!value) return false;
+    return ["true", "yes", "1", "in_stock", "in stock"].includes(
+      value.toLowerCase(),
+    );
+  };
 
   // toggle helpers
   const toggle = (value: string, list: string[], setList: any) => {
@@ -98,22 +126,32 @@ export default function Collections() {
 
   // FILTER LOGIC
   const filteredProducts = products.filter((p) => {
-    const matchSearch = p.name.toLowerCase().includes(search.toLowerCase());
+    const matchSearch = (p.name ?? "")
+      .toLowerCase()
+      .includes(search.toLowerCase());
 
+    const productSizes = normalizeList(p.size);
     const matchSize =
       selectedSizes.length === 0 ||
-      p.sizes.some((s) => selectedSizes.includes(s));
+      productSizes.some((s) => selectedSizes.includes(s));
 
+    const productCategories = normalizeList(p.category).map((c) =>
+      c.toLowerCase(),
+    );
     const matchCategory =
       selectedCategories.length === 0 ||
-      selectedCategories.includes(p.category);
+      productCategories.some((c) =>
+        selectedCategories.map((s) => s.toLowerCase()).includes(c),
+      );
 
-    const matchStock = !inStockOnly || p.inStock;
+    const matchStock = !inStockOnly || isInStock(p.in_stock);
 
+    const productColors = normalizeList(p.color).map((c) => c.toLowerCase());
     const matchColor =
-      !selectedColors ||
       selectedColors.length === 0 ||
-      (p.colors && p.colors.some((c) => selectedColors.includes(c)));
+      productColors.some((c) =>
+        selectedColors.map((s) => s.toLowerCase()).includes(c),
+      );
 
     return (
       matchSearch && matchSize && matchCategory && matchStock && matchColor
@@ -121,9 +159,9 @@ export default function Collections() {
   });
 
   return (
-    <div className="flex gap-10 px-10 py-10">
+    <div className="flex flex-col gap-10 px-4 py-8 sm:px-6 lg:flex-row lg:px-10 lg:py-10">
       {/* FILTERS */}
-      <div className="w-[260px] space-y-6 mt-30">
+      <div className="w-full space-y-6 lg:mt-30 lg:w-[260px]">
         <h2 className={`text-xl font-semibold ${sairaStencil.className}`}>
           Filters
         </h2>
@@ -132,16 +170,20 @@ export default function Collections() {
         <div>
           <p className={`mb-2 font-medium ${sairaStencil.className}`}>Size</p>
           <div className="flex flex-wrap gap-2">
-            {sizesList.map((size) => (
-              <Button
-                key={size}
-                variant={selectedSizes.includes(size) ? "default" : "outline"}
-                onClick={() => toggle(size, selectedSizes, setSelectedSizes)}
-                className="bg-transparent border border-[#606054ac] rounded-sm"
-              >
-                {size}
-              </Button>
-            ))}
+            {sizesList.length === 0 ? (
+              <span className="text-sm text-stone-400">No sizes</span>
+            ) : (
+              sizesList.map((size) => (
+                <Button
+                  key={size}
+                  variant={selectedSizes.includes(size) ? "default" : "outline"}
+                  onClick={() => toggle(size, selectedSizes, setSelectedSizes)}
+                  className="bg-transparent border border-[#606054ac] rounded-sm"
+                >
+                  {size}
+                </Button>
+              ))
+            )}
           </div>
         </div>
 
@@ -166,36 +208,44 @@ export default function Collections() {
             Category
           </p>
           <div className="space-y-2">
-            {categoriesList.map((cat) => (
-              <div key={cat} className="flex items-center gap-2">
-                <Checkbox
-                  checked={selectedCategories.includes(cat)}
-                  onCheckedChange={() =>
-                    toggle(cat, selectedCategories, setSelectedCategories)
-                  }
-                  className="bg-transparent border border-[#606054ac] rounded-sm"
-                />
-                <span>{cat}</span>
-              </div>
-            ))}
+            {categoriesList.length === 0 ? (
+              <span className="text-sm text-stone-400">No categories</span>
+            ) : (
+              categoriesList.map((cat) => (
+                <div key={cat} className="flex items-center gap-2">
+                  <Checkbox
+                    checked={selectedCategories.includes(cat)}
+                    onCheckedChange={() =>
+                      toggle(cat, selectedCategories, setSelectedCategories)
+                    }
+                    className="bg-transparent border border-[#606054ac] rounded-sm"
+                  />
+                  <span>{cat}</span>
+                </div>
+              ))
+            )}
           </div>
         </div>
 
         <div>
           <p className={`mb-2 font-medium ${sairaStencil.className}`}>Colors</p>
           <div className="space-y-2">
-            {colorsList.map((color) => (
-              <div key={color} className="flex items-center gap-2">
-                <Checkbox
-                  checked={selectedColors.includes(color)}
-                  onCheckedChange={() =>
-                    toggle(color, selectedColors, setSelectedColors)
-                  }
-                  className="bg-transparent border border-[#606054ac] rounded-sm"
-                />
-                <span>{color}</span>
-              </div>
-            ))}
+            {colorsList.length === 0 ? (
+              <span className="text-sm text-stone-400">No colors</span>
+            ) : (
+              colorsList.map((color) => (
+                <div key={color} className="flex items-center gap-2">
+                  <Checkbox
+                    checked={selectedColors.includes(color)}
+                    onCheckedChange={() =>
+                      toggle(color, selectedColors, setSelectedColors)
+                    }
+                    className="bg-transparent border border-[#606054ac] rounded-sm"
+                  />
+                  <span>{color}</span>
+                </div>
+              ))
+            )}
           </div>
         </div>
       </div>
@@ -203,7 +253,7 @@ export default function Collections() {
       {/* CONTENT */}
       <div className="flex-1">
         {/* HEADER */}
-        <div className="mb-6 mt-20">
+        <div className="mb-6 mt-6 lg:mt-20">
           <p className="text-sm text-muted-foreground">Home / Products</p>
           <h1 className={`text-3xl mt-2 ${sairaStencil.className}`}>
             PRODUCTS
@@ -218,6 +268,8 @@ export default function Collections() {
           onChange={(e) => setSearch(e.target.value)}
         />
 
+        {loadError && <p className="text-sm text-red-500 mb-4">{loadError}</p>}
+
         {/* ACTIVE FILTERS */}
         <div className="flex gap-2 mb-6 flex-wrap">
           {selectedSizes.map((s) => (
@@ -226,33 +278,47 @@ export default function Collections() {
           {selectedCategories.map((c) => (
             <Badge key={c}>{c}</Badge>
           ))}
+          {selectedColors.map((c) => (
+            <Badge key={c}>{c}</Badge>
+          ))}
           {inStockOnly && <Badge>In Stock</Badge>}
         </div>
 
         {/* GRID */}
-        <div className="grid grid-cols-3 gap-8">
-          {filteredProducts.map((product) => (
-            <div
-              key={product.id}
-              onClick={() => router.push(`/collections/${product.id}`)}
-            >
-              <div className="bg-gray-100 overflow-hidden cursor-pointer">
-                <Image
-                  src={product.image}
-                  alt={product.name}
-                  className="w-full h-[320px] object-cover hover:scale-105 transition"
-                />
-              </div>
+        <div className="mt-10 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          {loading
+            ? Array.from({ length: 6 }).map((_, index) => (
+                <div key={index} className="animate-pulse">
+                  <div className="h-64 w-full bg-stone-100 sm:h-[280px] lg:h-[320px]" />
+                  <div className="mt-3 space-y-2">
+                    <div className="h-3 w-24 bg-stone-100" />
+                    <div className="h-4 w-40 bg-stone-100" />
+                    <div className="h-4 w-20 bg-stone-100" />
+                  </div>
+                </div>
+              ))
+            : filteredProducts.map((product) => (
+                <div
+                  key={product.id}
+                  onClick={() => router.push(`/collections/${product.id}`)}
+                >
+                  <div className="bg-gray-100 overflow-hidden cursor-pointer">
+                    <Image
+                      src={product.image || ""}
+                      alt={product.name || "Product"}
+                      width={640}
+                      height={800}
+                      unoptimized
+                      className="h-64 w-full object-cover transition hover:scale-105 sm:h-[280px] lg:h-[320px]"
+                    />
+                  </div>
 
-              <div className="mt-3">
-                <p className="text-sm text-muted-foreground">
-                  {product.category}
-                </p>
-                <h3 className="font-medium">{product.name}</h3>
-                <p className="mt-1">${product.price}</p>
-              </div>
-            </div>
-          ))}
+                  <div className="mt-3">
+                    <h3 className="font-medium">{product.name}</h3>
+                    <p className="mt-1">{product.price} MAD</p>
+                  </div>
+                </div>
+              ))}
         </div>
       </div>
     </div>

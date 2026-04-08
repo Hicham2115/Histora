@@ -8,6 +8,8 @@ type Product = {
   price: number;
   image: string;
   quantity: number;
+  size?: string | null;
+  color?: string | null;
 };
 
 type Store = {
@@ -30,7 +32,12 @@ export const useStore = create<Store>()(
       orders: [],
       addToCart: (product) => {
         const cart = [...get().cart];
-        const existing = cart.find((p) => p.id === product.id);
+        const existing = cart.find(
+          (p) =>
+            p.id === product.id &&
+            (p.size ?? null) === (product.size ?? null) &&
+            (p.color ?? null) === (product.color ?? null),
+        );
         if (existing) {
           existing.quantity += product.quantity;
         } else {
@@ -59,6 +66,6 @@ export const useStore = create<Store>()(
       },
       clearCart: () => set({ cart: [] }),
     }),
-    { name: "store" } // localStorage key
-  )
+    { name: "store" }, // localStorage key
+  ),
 );

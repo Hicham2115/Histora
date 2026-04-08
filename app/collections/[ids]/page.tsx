@@ -89,7 +89,9 @@ export default function ProductPage() {
   const product = products.find((p) => p.id === Number(rawId));
 
   const [activeImage, setActiveImage] = useState(0);
-  const [selectedSize, setSelectedSize] = useState<string | null>(null);
+  const [selectedSize, setSelectedSize] = useState<string | null>(
+    product?.sizes[0] ?? null,
+  );
   const [selectedColor, setSelectedColor] = useState<string | null>(
     product?.colors[0] ?? null,
   );
@@ -188,7 +190,7 @@ export default function ProductPage() {
             {product.name}
           </h1>
           <p className="text-2xl font-medium text-black mb-1">
-            ${product.price}
+            {product.price} MAD
           </p>
           <p className="text-xs text-gray-500 mb-5">MRP incl. of all taxes</p>
           <p className="text-sm text-black leading-relaxed mb-6 pb-5 border-b border-gray-100">
@@ -292,6 +294,8 @@ export default function ProductPage() {
                 price: product.price,
                 image: product.images[0].src,
                 quantity,
+                size: selectedSize ?? null,
+                color: selectedColor ?? null,
               })
             }
             className={`w-full py-4 rounded text-xs font-medium tracking-widest uppercase transition-all cursor-pointer bg-black text-white`}

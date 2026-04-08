@@ -2,9 +2,19 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useStore } from "@/components/store/useStore";
 import { toast } from "sonner";
+import { supabase } from "@/lib/supabase";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 const STEPS = ["Information"] as const;
 type Step = (typeof STEPS)[number];
@@ -40,6 +50,9 @@ export default function CheckoutPage() {
     if (Object.keys(newErrors).length > 0) return;
 
     try {
+      const orderCreated = await submitOrder();
+      if (!orderCreated) return;
+
       const response = await fetch("/api/sendOrder", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -51,7 +64,7 @@ export default function CheckoutPage() {
           address,
           city,
           postalCode,
-          cart, 
+          cart,
           subtotal: cart
             .reduce((sum, item) => sum + item.price * item.quantity, 0)
             .toFixed(2),
@@ -72,6 +85,67 @@ export default function CheckoutPage() {
     (sum, item) => sum + item.price * item.quantity,
     0,
   );
+
+  const submitOrder = async () => {
+    try {
+      const { data: order, error } = await supabase
+        .from("orders")
+        .insert([
+          {
+            first_name: firstName,
+            last_name: lastName,
+            phone,
+            email,
+            city,
+            total: Number(subtotal.toFixed(2)),
+          },
+        ])
+        .select()
+        .single();
+
+      if (error) {
+        console.error(error);
+        toast.error("Failed to save order. Please try again.");
+        return false;
+      }
+      const items = cart.map((item) => {
+        const productId =
+          typeof item.id === "string" ? Number.parseInt(item.id, 10) : item.id;
+
+        if (!Number.isFinite(productId)) {
+          throw new Error("Invalid product id in cart.");
+        }
+
+        console.log("Saving item", { ...item, productId });
+
+        return {
+          order_id: order.id,
+          product_id: productId,
+          quantity: item.quantity,
+          size: item.size ?? null,
+          color: item.color ?? null,
+        };
+      });
+
+      const { error: itemsError } = await supabase
+        .from("order_items")
+        .insert(items);
+
+      if (itemsError) {
+        console.error(itemsError);
+        toast.error("Failed to save order items. Please try again.");
+        return false;
+      }
+
+      return true;
+    } catch (err) {
+      console.error(err);
+      toast.error(
+        "Order failed. Please remove items from cart and add them again.",
+      );
+      return false;
+    }
+  };
 
   return (
     <div className="min-h-screen bg-[#f2f1ef] px-6 md:px-16 py-10">
@@ -139,7 +213,7 @@ export default function CheckoutPage() {
                     placeholder="Email"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    className="w-full px-3.5 py-3 bg-white border border-stone-200 rounded text-sm text-stone-900 placeholder:text-stone-300 focus:border-stone-500 outline-none transition-colors"
+                    className="w-full h-11 px-3.5 py-3 bg-white border border-stone-200 rounded text-sm text-stone-900 placeholder:text-stone-300 focus:border-stone-500 outline-none transition-colors"
                   />
                   {errors.email && (
                     <p className="text-xs text-red-500">{errors.email}</p>
@@ -150,7 +224,7 @@ export default function CheckoutPage() {
                     placeholder="Phone"
                     value={phone}
                     onChange={(e) => setPhone(e.target.value)}
-                    className="w-full px-3.5 py-3 bg-white border border-stone-200 rounded text-sm text-stone-900 placeholder:text-stone-300 focus:border-stone-500 outline-none transition-colors"
+                    className="w-full h-11 px-3.5 py-3 bg-white border border-stone-200 rounded text-sm text-stone-900 placeholder:text-stone-300 focus:border-stone-500 outline-none transition-colors"
                   />
                   {errors.phone && (
                     <p className="text-xs text-red-500">{errors.phone}</p>
@@ -168,7 +242,7 @@ export default function CheckoutPage() {
                       placeholder="First name"
                       value={firstName}
                       onChange={(e) => setFirstName(e.target.value)}
-                      className="w-full px-3.5 py-3 bg-white border border-stone-200 rounded text-sm text-stone-900 placeholder:text-stone-300 focus:border-stone-500 outline-none transition-colors"
+                      className="w-full h-11 px-3.5 py-3 bg-white border border-stone-200 rounded text-sm text-stone-900 placeholder:text-stone-300 focus:border-stone-500 outline-none transition-colors"
                     />
                     {errors.firstName && (
                       <p className="text-xs text-red-500">{errors.firstName}</p>
@@ -179,7 +253,7 @@ export default function CheckoutPage() {
                       placeholder="Last name"
                       value={lastName}
                       onChange={(e) => setLastName(e.target.value)}
-                      className="w-full px-3.5 py-3 bg-white border border-stone-200 rounded text-sm text-stone-900 placeholder:text-stone-300 focus:border-stone-500 outline-none transition-colors"
+                      className="w-full h-11 px-3.5 py-3 bg-white border border-stone-200 rounded text-sm text-stone-900 placeholder:text-stone-300 focus:border-stone-500 outline-none transition-colors"
                     />
                     {errors.lastName && (
                       <p className="text-xs text-red-500">{errors.lastName}</p>
@@ -192,7 +266,7 @@ export default function CheckoutPage() {
                     placeholder="Address"
                     value={address}
                     onChange={(e) => setAddress(e.target.value)}
-                    className="w-full px-3.5 py-3 bg-white border border-stone-200 rounded text-sm text-stone-900 placeholder:text-stone-300 focus:border-stone-500 outline-none transition-colors"
+                    className="w-full h-11 px-3.5 py-3 bg-white border border-stone-200 rounded text-sm text-stone-900 placeholder:text-stone-300 focus:border-stone-500 outline-none transition-colors"
                   />
                   {errors.address && (
                     <p className="text-xs text-red-500">{errors.address}</p>
@@ -200,17 +274,47 @@ export default function CheckoutPage() {
                 </div>
 
                 <div className="grid grid-cols-2 gap-2.5 mt-2">
-                  <div>
-                    <input
-                      placeholder="City"
-                      value={city}
-                      onChange={(e) => setCity(e.target.value)}
-                      className="w-full px-3.5 py-3 bg-white border border-stone-200 rounded text-sm text-stone-900 placeholder:text-stone-300 focus:border-stone-500 outline-none transition-colors"
-                    />
-                    {errors.city && (
-                      <p className="text-xs text-red-500">{errors.city}</p>
-                    )}
-                  </div>
+                  <Select onValueChange={(value) => setCity(value)}>
+                    <SelectTrigger className="w-full px-3.5 py-3 bg-white border border-stone-200 rounded text-sm text-stone-900 data-[size=default]:h-11.5 data-[placeholder]:text-stone-300 focus:border-stone-500 outline-none transition-colors">
+                      <SelectValue placeholder="Select a city" />
+                    </SelectTrigger>
+
+                    <SelectContent className="bg-white border border-stone-200 text-stone-900 max-h-80">
+                      <SelectGroup>
+                        <SelectItem value="casablanca">Casablanca</SelectItem>
+                        <SelectItem value="rabat">Rabat</SelectItem>
+                        <SelectItem value="marrakesh">Marrakesh</SelectItem>
+                        <SelectItem value="fes">Fes</SelectItem>
+                        <SelectItem value="tangier">Tangier</SelectItem>
+                        <SelectItem value="agadir">Agadir</SelectItem>
+                        <SelectItem value="meknes">Meknes</SelectItem>
+                        <SelectItem value="oujda">Oujda</SelectItem>
+                        <SelectItem value="kenitra">Kenitra</SelectItem>
+                        <SelectItem value="tetouan">Tetouan</SelectItem>
+                        <SelectItem value="safi">Safi</SelectItem>
+                        <SelectItem value="el_jadida">El Jadida</SelectItem>
+                        <SelectItem value="beni_mellal">Beni Mellal</SelectItem>
+                        <SelectItem value="nador">Nador</SelectItem>
+                        <SelectItem value="taza">Taza</SelectItem>
+                        <SelectItem value="khouribga">Khouribga</SelectItem>
+                        <SelectItem value="settat">Settat</SelectItem>
+                        <SelectItem value="larache">Larache</SelectItem>
+                        <SelectItem value="khemisset">Khemisset</SelectItem>
+                        <SelectItem value="guelmim">Guelmim</SelectItem>
+                        <SelectItem value="errachidia">Errachidia</SelectItem>
+                        <SelectItem value="ouarzazate">Ouarzazate</SelectItem>
+                        <SelectItem value="taroudant">Taroudant</SelectItem>
+                        <SelectItem value="tinghir">Tinghir</SelectItem>
+                        <SelectItem value="ifran">Ifrane</SelectItem>
+                        <SelectItem value="azrou">Azrou</SelectItem>
+                        <SelectItem value="dakhla">Dakhla</SelectItem>
+                        <SelectItem value="laayoune">Laayoune</SelectItem>
+                        <SelectItem value="smara">Smara</SelectItem>
+                        <SelectItem value="boujdour">Boujdour</SelectItem>
+                      </SelectGroup>
+                    </SelectContent>
+                  </Select>
+
                   <div>
                     <input
                       placeholder="Postal code"
@@ -278,14 +382,14 @@ export default function CheckoutPage() {
                     </div>
                     <div className="text-right pt-0.5">
                       <p className="text-[13px] font-medium text-stone-900">
-                        ${item.price}
+                        {item.price} MAD
                       </p>
                       <button
                         type="button"
                         onClick={() => removeFromCart(item.id)}
-                        className="text-[11px] text-stone-400 underline hover:text-red-400 transition-colors mt-1"
+                        className="text-[11px] cursor-pointer text-stone-400 underline hover:text-red-400 transition-colors mt-1"
                       >
-                        Change
+                        Remove
                       </button>
                     </div>
                   </div>
@@ -295,19 +399,19 @@ export default function CheckoutPage() {
               <div className="border-t border-stone-100 mt-2 pt-4 space-y-2">
                 <div className="flex justify-between text-sm">
                   <span className="text-stone-500">Subtotal</span>
-                  <span className="text-stone-900">${subtotal.toFixed(2)}</span>
+                  <span className="text-stone-900">
+                    {subtotal.toFixed(2)} MAD
+                  </span>
                 </div>
                 <div className="flex justify-between text-sm">
                   <span className="text-stone-500">Shipping</span>
-                  <span className="text-xs text-stone-400">
-                    Calculated at next step
-                  </span>
+                  <span className="text-xs text-stone-400">FREE</span>
                 </div>
               </div>
 
               <div className="flex justify-between text-sm font-medium border-t border-stone-200 mt-4 pt-4">
                 <span>Total</span>
-                <span>${subtotal.toFixed(2)}</span>
+                <span>{subtotal.toFixed(2)} MAD</span>
               </div>
             </div>
           </div>
