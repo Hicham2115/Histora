@@ -9,8 +9,8 @@ import {
 
 import { Saira_Stencil_One, Noto_Sans } from "next/font/google";
 
-import img1 from "@/app/assets/1.png";
-import img2 from "@/app/assets/2.png";
+import img1 from "@/app/assets/78ed5049ffa1fdb4f90bf2df4a83f27f.jpg";
+import img2 from "@/app/assets/2bd760b75c0486cf71264531bcad6673.jpg";
 import Image from "next/image";
 
 const sairaStencil = Saira_Stencil_One({
@@ -98,9 +98,12 @@ function Hero() {
         {/* RIGHT CAROUSEL */}
         <div className="relative z-20 w-[55%] max-w-2xl">
           {/* Decorative offset box */}
-          <div className="absolute -top-4 -right-4 w-full h-full border border-stone-300/60 rounded-none z-0" />
+          <div className="absolute top-4 -right-4 w-full h-full border border-stone-300/60 rounded-none z-0" />
 
-          <Carousel opts={{ align: "start" }} className="relative z-10">
+          <Carousel
+            opts={{ align: "start" }}
+            className="relative z-10 lg:mt-30 mt-40"
+          >
             <CarouselContent className="-ml-2">
               {[img1, img2].map((img, index) => (
                 <CarouselItem key={index} className="basis-1/2 pl-2">

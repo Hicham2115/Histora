@@ -3,11 +3,12 @@ import React, { useState } from "react";
 import { Saira_Stencil_One, Noto_Sans } from "next/font/google";
 import Image from "next/image";
 
-import img3 from "@/app/assets/daa.jpeg";
-import img4 from "@/app/assets/dqdqd.jpeg";
-import img5 from "@/app/assets/qsq.jpeg";
-import img6 from "@/app/assets/10 Things Graceful Women Avoid.jpeg";
+import img3 from "@/app/assets/b1ef2751e0f770c18e14bc30f1512734.jpg";
+import img4 from "@/app/assets/1cd1182eb97fa3347fb70ec1306b857c.jpg";
+import img5 from "@/app/assets/55f3c564692998cb42c31d358d75eb06.jpg";
+import img6 from "@/app/assets/1bb3a0d6b5a6ac7f0266bc0673a0df6d.jpg";
 import { ArrowDown } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 const sairaStencil = Saira_Stencil_One({ subsets: ["latin"], weight: "400" });
 const notoSans = Noto_Sans({
@@ -141,6 +142,7 @@ function Collections() {
   const totalCount = 50;
   const itemsPerPage = 4;
   const totalPages = Math.ceil(totalCount / itemsPerPage);
+  const router = useRouter();
 
   return (
     <section
@@ -156,7 +158,7 @@ function Collections() {
           <p className={`${notoSans.className} text-sm text-stone-500 mt-2`}>
             Discover our newest arrivals and exclusive collections
           </p>
-          <div className="flex gap-4 mt-5">
+          {/* <div className="flex gap-4 mt-5">
             <span
               className={`${notoSans.className} text-sm text-black mt-2 hover:underline cursor-pointer`}
             >
@@ -177,10 +179,13 @@ function Collections() {
             >
               Kids
             </span>
-          </div>
+          </div> */}
         </h2>
 
         <button
+          onClick={() => {
+            router.push("/collections");
+          }}
           className={`${notoSans.className} text-sm text-stone-500 hover:text-stone-900 transition-colors duration-200 underline underline-offset-4 decoration-stone-300 hover:decoration-stone-700 mt-2`}
         >
           See All

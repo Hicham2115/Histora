@@ -80,23 +80,7 @@ export default function Collections() {
     [products],
   );
 
-  const colorsList = [
-    "White",
-    "Black",
-    "Gray",
-    "Red",
-    "Blue",
-    "Green",
-    "Yellow",
-    "Pink",
-    "Purple",
-    "Orange",
-    "Brown",
-    "Beige",
-    "Navy",
-    "Turquoise",
-    "Maroon",
-  ];
+  const colorsList = ["White", "Black"];
 
   const categoriesList = [
     "T-Shirts",
