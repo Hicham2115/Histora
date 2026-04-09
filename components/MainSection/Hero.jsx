@@ -13,6 +13,8 @@ import img1 from "@/app/assets/1.png";
 import img2 from "@/app/assets/2.png";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
+import TextType from "@/components/TextType";
+import SplitText from "@/components/SplitText";
 
 const sairaStencil = Saira_Stencil_One({
   subsets: ["latin"],
@@ -64,7 +66,35 @@ function Hero() {
           <div className="hidden lg:block absolute -left-4 top-0 h-full w-[2px] bg-gradient-to-b from-transparent via-stone-400 to-transparent" />
 
           <div className="flex flex-col leading-none">
-            <span
+            <SplitText
+              text="Crafted"
+              className="text-[clamp(3rem,10vw,6.5rem)] text-stone-800 tracking-tight"
+              delay={50}
+              duration={1.25}
+              ease="power3.out"
+              splitType="chars"
+              from={{ opacity: 0, y: 40 }}
+              to={{ opacity: 1, y: 0 }}
+              threshold={0.1}
+              rootMargin="-100px"
+              textAlign="left"
+              showCallback
+            />
+            <SplitText
+              text="  For You"
+              className="text-[clamp(3rem,10vw,6.5rem)] text-stone-800 tracking-tight"
+              delay={50}
+              duration={1.25}
+              ease="power3.out"
+              splitType="chars"
+              from={{ opacity: 0, y: 40 }}
+              to={{ opacity: 1, y: 0 }}
+              threshold={0.1}
+              rootMargin="-100px"
+              textAlign="left"
+              showCallback
+            />
+            {/* <span
               className="text-[clamp(3rem,10vw,6.5rem)] text-stone-800 tracking-tight"
               style={{ lineHeight: "0.9" }}
             >
@@ -75,20 +105,33 @@ function Hero() {
               style={{ lineHeight: "0.9" }}
             >
               For You
-            </span>
+            </span> */}
           </div>
 
           {/* Thin divider */}
           <div className="w-12 h-px bg-stone-400 mx-auto lg:mx-0" />
 
-          <p
+          <TextType
+            text={[
+              "Style isn't just what you put on — it's what you put out into the world. Our collection brings together clothing, mugs, and wall art that speak before you do, stay long after you leave, and make every ordinary moment feel worth remembering",
+            ]}
+            typingSpeed={75}
+            className={`${notoSans.className} text-sm font-light leading-relaxed text-stone-500`}
+            pauseDuration={1500}
+            showCursor
+            cursorCharacter="_"
+            deletingSpeed={0}
+            loop={false}
+            cursorBlinkDuration={0.5}
+          />
+          {/* <p
             className={`${notoSans.className} text-sm font-light leading-relaxed text-stone-500`}
           >
             Style isn't just what you put on — it's what you put out into the
             world. Our collection brings together clothing, mugs, and wall art
             that speak before you do, stay long after you leave, and make every
             ordinary moment feel worth remembering.
-          </p>
+          </p> */}
 
           {/* CTA */}
           <button

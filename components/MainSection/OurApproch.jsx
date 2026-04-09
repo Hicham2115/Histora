@@ -11,6 +11,8 @@ import img3 from "@/app/assets/asas.jpeg";
 import img4 from "@/app/assets/dde.jpeg";
 import img5 from "@/app/assets/Ryderwear Mens Pursuit Oversized T-Shirt - Black Stonewash M.jpeg";
 import img6 from "@/app/assets/black plain tshirt.jpeg";
+import SplitText from "@/components/SplitText";
+import TextType from "@/components/TextType";
 
 const sairaStencil = Saira_Stencil_One({ subsets: ["latin"], weight: "400" });
 const cormorant = Cormorant_Garamond({
@@ -35,7 +37,31 @@ function OurApproch() {
       </p>
 
       {/* Headline */}
-      <h2
+      <div className="text-center">
+        <SplitText
+          text="Where Art Meets"
+          className={`${sairaStencil.className} text-[clamp(2.2rem,6vw,4.5rem)]`}
+          delay={50}
+          duration={1.25}
+        />
+        <br />
+        <SplitText
+          text=" Everyday Life"
+          className={`${sairaStencil.className} text-[clamp(2.2rem,6vw,4.5rem)]`}
+          delay={50}
+          duration={1.25}
+          ease="power3.out"
+          splitType="chars"
+          from={{ opacity: 0, y: 40 }}
+          to={{ opacity: 1, y: 0 }}
+          threshold={0.1}
+          rootMargin="-100px"
+          textAlign="center"
+          showCallback
+        />
+      </div>
+
+      {/* <h2
         className={`${sairaStencil.className} text-[clamp(2.4rem,7vw,5.5rem)] leading-[1.05] text-center text-stone-900 mb-6`}
       >
         Where Art Meets
@@ -45,7 +71,7 @@ function OurApproch() {
         >
           Everyday Life
         </span>
-      </h2>
+      </h2> */}
 
       {/* Divider */}
       <div className="flex items-center justify-center gap-4 mb-8">
@@ -55,14 +81,29 @@ function OurApproch() {
       </div>
 
       {/* Body copy */}
-      <p
+      <div className="text-center">
+        <TextType
+          text={[
+            "At Histora, we blend creativity with craftsmanship to bring you pieces that transcend trends and stand the test of time. Every design — from our signature tees to our wall art — is meticulously crafted to carry an exquisite finish worthy of the spaces and people it adorns.",
+          ]}
+          typingSpeed={75}
+          className={`${cormorant.className} text-lg md:text-xl font-light text-center text-stone-700 leading-relaxed max-w-5xl mx-auto mb-20`}
+          pauseDuration={1500}
+          showCursor
+          cursorCharacter="_"
+          deletingSpeed={0}
+          loop={false}
+          cursorBlinkDuration={0.5}
+        />
+      </div>
+      {/* <p
         className={`${cormorant.className} text-lg md:text-xl font-light text-center text-stone-700 leading-relaxed max-w-5xl mx-auto mb-20`}
       >
         At Histora, we blend creativity with craftsmanship to bring you pieces
         that transcend trends and stand the test of time. Every design — from
         our signature tees to our wall art — is meticulously crafted to carry an
         exquisite finish worthy of the spaces and people it adorns.
-      </p>
+      </p> */}
 
       {/* Image grid */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4">

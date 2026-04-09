@@ -8,6 +8,7 @@ import { supabase } from "@/lib/supabase";
 import { Skeleton } from "@/components/ui/skeleton";
 import router from "next/dist/shared/lib/router/router";
 import { Eye } from "lucide-react";
+import SplitText from "@/components/SplitText";
 
 const sairaStencil = Saira_Stencil_One({ subsets: ["latin"], weight: "400" });
 const notoSans = Noto_Sans({
@@ -145,11 +146,26 @@ function NewArrivals() {
     >
       {/* Header */}
       <div className="flex justify-between mb-8">
-        <h2
+        <SplitText
+          text="NEW THIS WEEK"
+          className={`${sairaStencil.className} text-[clamp(2.2rem,6vw,4.5rem)]`}
+          delay={50}
+          duration={1.25}
+          ease="power3.out"
+          splitType="chars"
+          from={{ opacity: 0, y: 40 }}
+          to={{ opacity: 1, y: 0 }}
+          threshold={0.1}
+          rootMargin="-100px"
+          textAlign="left"
+          showCallback
+        />
+
+        {/* <h2
           className={`${sairaStencil.className} text-[clamp(2.2rem,6vw,4.5rem)]`}
         >
           NEW THIS WEEK
-        </h2>
+        </h2> */}
 
         <button
           onClick={() => router.push("/collections")}

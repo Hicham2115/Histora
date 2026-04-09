@@ -5,6 +5,7 @@ import Image from "next/image";
 import { ArrowDown, Eye } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { supabase } from "@/lib/supabase";
+import SplitText from "@/components/SplitText";
 
 const sairaStencil = Saira_Stencil_One({ subsets: ["latin"], weight: "400" });
 const notoSans = Noto_Sans({
@@ -173,8 +174,22 @@ function Collections() {
         <h2
           className={`${sairaStencil.className} text-[clamp(2.2rem,6vw,4.5rem)] leading-none text-stone-900`}
         >
-          Our Latest{" "}
-          <span className="inline-flex items-start gap-3">Collections</span>
+          {/* Our Latest{" "}
+          <span className="inline-flex items-start gap-3">Collections</span> */}
+          <SplitText
+            text="Our Latest Collections"
+            className={`${sairaStencil.className} text-[clamp(2.2rem,6vw,4.5rem)] leading-none text-stone-900`}
+            delay={50}
+            duration={1.25}
+            ease="power3.out"
+            splitType="chars"
+            from={{ opacity: 0, y: 40 }}
+            to={{ opacity: 1, y: 0 }}
+            threshold={0.1}
+            rootMargin="-100px"
+            textAlign="left"
+            showCallback
+          />
           <p className={`${notoSans.className} text-sm text-stone-500 mt-2`}>
             Discover our newest arrivals and exclusive collections
           </p>

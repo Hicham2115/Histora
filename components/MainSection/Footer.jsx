@@ -7,7 +7,7 @@ const notoSans = Noto_Sans({ subsets: ["latin"], weight: ["300", "400"] });
 
 function Footer() {
   return (
-    <footer className="relative bg-[#faf9f7] border-t border-stone-200 px-8 md:px-24 py-12 mt-24">
+    <footer className="relative bg-[#faf9f7] border-t border-stone-200 px-8 md:px-24 py-12 ">
       {/* Decorative grain overlay */}
       <div
         className="pointer-events-none absolute inset-0 z-0 opacity-[0.03]"
