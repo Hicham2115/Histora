@@ -2,7 +2,7 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { Saira_Stencil_One, Noto_Sans } from "next/font/google";
 import Image from "next/image";
-import { ArrowDown } from "lucide-react";
+import { ArrowDown, Eye } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { supabase } from "@/lib/supabase";
 
@@ -33,9 +33,9 @@ function ProductCard({ product, index }) {
       <div
         className="relative bg-[#eceef2] overflow-hidden cursor-pointer"
         style={{ aspectRatio: "4/4" }}
-         onClick={() => {
-            router.push(`/collections/${product.id}`);
-          }}
+        onClick={() => {
+          router.push(`/collections/${product.id}`);
+        }}
         onMouseEnter={() => setHovered(true)}
         onMouseLeave={() => setHovered(false)}
       >
@@ -53,12 +53,20 @@ function ProductCard({ product, index }) {
 
         {/* Quick add button */}
         <button
-          className={`absolute bottom-4 left-1/2 -translate-x-1/2 w-8 h-8 border border-stone-400 bg-white/90 backdrop-blur-sm flex items-center justify-center text-stone-700 transition-all duration-300 ${
-            hovered ? "opacity-100 translate-y-0" : "opacity-0 translate-y-2"
-          }`}
-          style={{ fontSize: "18px", lineHeight: 1 }}
+          className={`absolute bottom-4 left-1/2 -translate-x-1/2
+    w-10 h-10 rounded-full
+    bg-white/80 backdrop-blur-md
+    border border-stone-200
+    shadow-md
+    flex items-center justify-center
+    text-stone-700
+    transition-all duration-300
+    hover:bg-black hover:text-white hover:scale-110
+    active:scale-95
+    ${hovered ? "opacity-100 translate-y-0" : "opacity-0 translate-y-3"}
+  `}
         >
-          +
+          <Eye className="w-5 h-5 stroke-[1.8]" />
         </button>
       </div>
 

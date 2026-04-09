@@ -12,6 +12,7 @@ import { Saira_Stencil_One, Noto_Sans } from "next/font/google";
 import img1 from "@/app/assets/78ed5049ffa1fdb4f90bf2df4a83f27f.jpg";
 import img2 from "@/app/assets/2bd760b75c0486cf71264531bcad6673.jpg";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 
 const sairaStencil = Saira_Stencil_One({
   subsets: ["latin"],
@@ -24,6 +25,8 @@ const notoSans = Noto_Sans({
 });
 
 function Hero() {
+  const router = useRouter();
+
   return (
     <div className="relative h-screen overflow-hidden ">
       {/* Subtle grain texture overlay */}
@@ -53,7 +56,7 @@ function Hero() {
 
       {/* Main layout */}
       <div
-        className={`${sairaStencil.className} h-full flex items-center justify-between px-8 md:px-16 gap-8`}
+        className={`${sairaStencil.className} h-full flex items-center flex-wrap justify-between px-8 md:px-16 gap-8`}
       >
         {/* LEFT TEXT */}
         <div className="relative z-20 flex flex-col gap-6 max-w-sm">
@@ -88,7 +91,10 @@ function Hero() {
 
           {/* CTA */}
           <button
-            className={`${notoSans.className} group relative w-fit text-xs tracking-[0.25em] uppercase font-light text-stone-800 border border-stone-800 px-6 py-3 overflow-hidden transition-all duration-300 hover:text-[#f5f0ea]`}
+            className={`${notoSans.className} group relative w-fit text-xs tracking-[0.25em] uppercase font-light text-stone-800 border border-stone-800 px-6 py-3 overflow-hidden transition-all duration-300 hover:text-[#f5f0ea] cursor-pointer`}
+            onClick={() => {
+              router.push("collections");
+            }}
           >
             <span className="absolute inset-0 bg-stone-800 -translate-x-full group-hover:translate-x-0 transition-transform duration-300 ease-in-out" />
             <span className="relative z-10">Go To Shop</span>
@@ -96,7 +102,7 @@ function Hero() {
         </div>
 
         {/* RIGHT CAROUSEL */}
-        <div className="relative z-20 w-[55%] max-w-2xl">
+        <div className="relative z-20 w-full lg:w-[55%] max-w-2xl">
           {/* Decorative offset box */}
           <div className="absolute top-4 -right-4 w-full h-full border border-stone-300/60 rounded-none z-0" />
 

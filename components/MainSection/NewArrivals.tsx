@@ -7,6 +7,7 @@ import { useRouter } from "next/navigation";
 import { supabase } from "@/lib/supabase";
 import { Skeleton } from "@/components/ui/skeleton";
 import router from "next/dist/shared/lib/router/router";
+import { Eye } from "lucide-react";
 
 const sairaStencil = Saira_Stencil_One({ subsets: ["latin"], weight: "400" });
 const notoSans = Noto_Sans({
@@ -53,11 +54,20 @@ function ProductCard({ product }: { product: Product }) {
 
         {/* Quick add */}
         <button
-          className={`absolute bottom-4 left-1/2 -translate-x-1/2 w-8 h-8 border border-stone-400 bg-white/90 backdrop-blur-sm flex items-center justify-center text-stone-700 transition-all duration-300 ${
-            hovered ? "opacity-100 translate-y-0" : "opacity-0 translate-y-2"
-          }`}
+          className={`absolute bottom-4 left-1/2 -translate-x-1/2
+    w-10 h-10 rounded-full
+    bg-white/80 backdrop-blur-md
+    border border-stone-200
+    shadow-md
+    flex items-center justify-center
+    text-stone-700
+    transition-all duration-300
+    hover:bg-black hover:text-white hover:scale-110
+    active:scale-95
+    ${hovered ? "opacity-100 translate-y-0" : "opacity-0 translate-y-3"}
+  `}
         >
-          +
+          <Eye className="w-5 h-5 stroke-[1.8]" />
         </button>
       </div>
 
