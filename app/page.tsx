@@ -5,6 +5,7 @@ import NewArrivals from "@/components/MainSection/NewArrivals";
 import Collections from "@/components/MainSection/Collections";
 import OurApproch from "@/components/MainSection/OurApproch";
 import Footer from "@/components/MainSection/Footer";
+import WhatsAppButton from "@/components/WhatsAppButton";
 
 import { useEffect } from "react";
 import { usePathname } from "next/navigation";
@@ -25,6 +26,7 @@ export default function Home() {
       <Collections />
       <OurApproch />
       <Footer />
+      <WhatsAppButton />
     </>
   );
 }

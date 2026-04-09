@@ -36,6 +36,7 @@ type Step = (typeof STEPS)[number];
 export default function CheckoutPage() {
   const cart = useStore((state) => state.cart);
   const removeFromCart = useStore((state) => state.removeFromCart);
+  const clearCart = useStore((state) => state.clearCart);
 
   const [currentStep, setCurrentStep] = useState<Step>("Information");
 
@@ -47,9 +48,11 @@ export default function CheckoutPage() {
   const [address, setAddress] = useState("");
   const [city, setCity] = useState("");
   const [postalCode, setPostalCode] = useState("");
+  const [purchasedProduct, setPurchasedProduct] = useState("");
 
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
   const [showSuccessModal, setShowSuccessModal] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleNext = async () => {
     const newErrors: { [key: string]: string } = {};
@@ -65,6 +68,7 @@ export default function CheckoutPage() {
     if (Object.keys(newErrors).length > 0) return;
 
     try {
+      setIsSubmitting(true);
       const orderCreated = await submitOrder();
       if (!orderCreated) return;
 
@@ -95,6 +99,8 @@ export default function CheckoutPage() {
     } catch (err) {
       console.error(err);
       toast.error("An error occurred. Please try again.");
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -191,15 +197,16 @@ export default function CheckoutPage() {
               Thanks for your order. We will contact you soon.
             </p>
             <div className="mt-6 flex gap-3">
-              <button
+              {/* <button
                 type="button"
                 onClick={() => setShowSuccessModal(false)}
                 className="flex-1 rounded border border-stone-200 px-4 py-2 text-xs font-medium uppercase tracking-[0.2em] text-stone-700 hover:border-stone-400"
               >
                 Continue
-              </button>
+              </button> */}
               <Link
                 href="/collections"
+                onClick={clearCart}
                 className="flex-1 rounded bg-stone-900 px-4 py-2 text-center text-xs font-medium uppercase tracking-[0.2em] text-white hover:bg-stone-800"
               >
                 Shop more
@@ -404,9 +411,10 @@ export default function CheckoutPage() {
               <button
                 type="button"
                 onClick={handleNext}
-                className="w-full flex cursor-pointer items-center justify-between px-5 py-4 bg-stone-200 hover:bg-stone-900 hover:text-white text-stone-900 rounded text-[11px] font-medium tracking-[0.12em] uppercase transition-colors group"
+                disabled={isSubmitting}
+                className="w-full flex items-center justify-between px-5 py-4 bg-stone-200 hover:bg-stone-900 hover:text-white text-stone-900 rounded text-[11px] font-medium tracking-[0.12em] uppercase transition-colors group disabled:cursor-not-allowed disabled:opacity-60 disabled:hover:bg-stone-200 disabled:hover:text-stone-900"
               >
-                <span>Confirm Order</span>
+                <span>{isSubmitting ? "Submitting..." : "Confirm Order"}</span>
                 <svg
                   width="18"
                   height="18"
