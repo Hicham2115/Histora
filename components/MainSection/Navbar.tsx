@@ -48,7 +48,7 @@ export default function Component() {
     0,
   );
 
-  console.log(cart);
+  console.log("from navbar", { wishlist, cart });
 
   return (
     <header className="fixed top-0 left-0 right-0 border-b px-4 md:px-6 z-50 backdrop-blur">
