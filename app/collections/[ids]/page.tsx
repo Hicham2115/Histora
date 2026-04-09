@@ -36,6 +36,20 @@ const normalizeList = (value: string | null) => {
     .filter(Boolean);
 };
 
+const normalizeImages = (value: string[] | string | null) => {
+  if (!value) return [] as string[];
+  if (Array.isArray(value)) return value.filter(Boolean) as string[];
+  const trimmed = String(value).trim();
+  if (!trimmed) return [] as string[];
+  if (trimmed.includes(",")) {
+    return trimmed
+      .split(",")
+      .map((item) => item.trim())
+      .filter(Boolean);
+  }
+  return [trimmed];
+};
+
 const isInStockValue = (value: string | null) => {
   if (!value) return false;
   return ["true", "yes", "1", "in_stock", "in stock"].includes(
@@ -127,7 +141,7 @@ export default function ProductPage() {
 
   const isWishlisted = wishlist.some((item) => item.id === product.id);
 
-  const thumbnails = product.image ?? [];
+  const thumbnails = normalizeImages(product?.image ?? null);
 
   return (
     <div className="min-h-screen p-4 sm:p-6 md:p-8 mt-16">
@@ -136,7 +150,7 @@ export default function ProductPage() {
         <div className="lg:hidden flex flex-col gap-4">
           {/* Main image */}
           <div className="rounded overflow-hidden aspect-[4/5] relative w-full">
-            {product.image && (
+            {thumbnails.length > 0 && (
               <Image
                 src={thumbnails[activeImage] || thumbnails[0]}
                 alt={product.name || "Product"}
@@ -327,7 +341,7 @@ export default function ProductPage() {
         <div className="hidden lg:grid grid-cols-[1fr_100px_360px] gap-6 items-start">
           {/* Main image */}
           <div className="rounded overflow-hidden aspect-[4/5] relative">
-            {product.image && (
+            {thumbnails.length > 0 && (
               <Image
                 src={thumbnails[activeImage] || thumbnails[0]}
                 alt={product.name || "Product"}

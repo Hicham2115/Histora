@@ -16,10 +16,25 @@ const notoSans = Noto_Sans({
   weight: ["300", "400", "600"],
 });
 
+const normalizeImages = (value) => {
+  if (!value) return [];
+  if (Array.isArray(value)) return value.filter(Boolean);
+  const trimmed = String(value).trim();
+  if (!trimmed) return [];
+  if (trimmed.includes(",")) {
+    return trimmed
+      .split(",")
+      .map((item) => item.trim())
+      .filter(Boolean);
+  }
+  return [trimmed];
+};
 
 function ProductCard({ product }) {
   const [hovered, setHovered] = useState(false);
   const router = useRouter();
+  const imageList = normalizeImages(product.image);
+  const primaryImage = imageList[0];
 
   return (
     <div className="flex flex-col gap-3">
@@ -32,9 +47,9 @@ function ProductCard({ product }) {
         onMouseEnter={() => setHovered(true)}
         onMouseLeave={() => setHovered(false)}
       >
-        {product.image ? (
+        {primaryImage ? (
           <Image
-            src={product.image?.[0]}
+            src={primaryImage}
             alt={product.name || "product"}
             fill
             className="object-cover"

@@ -16,6 +16,20 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
+const normalizeImages = (value: string[] | string | null | undefined) => {
+  if (!value) return [] as string[];
+  if (Array.isArray(value)) return value.filter(Boolean) as string[];
+  const trimmed = String(value).trim();
+  if (!trimmed) return [] as string[];
+  if (trimmed.includes(",")) {
+    return trimmed
+      .split(",")
+      .map((item) => item.trim())
+      .filter(Boolean);
+  }
+  return [trimmed];
+};
+
 const STEPS = ["Information"] as const;
 type Step = (typeof STEPS)[number];
 
@@ -407,38 +421,47 @@ export default function CheckoutPage() {
               </div>
 
               <div className="space-y-0 divide-y divide-stone-100">
-                {cart.map((item) => (
-                  <div key={item.id} className="flex gap-3 py-3">
-                    <div className="relative w-[72px] h-[88px] flex-shrink-0 rounded overflow-hidden bg-stone-100">
-                      <Image
-                          src={item.image?.[0] || item.image}
-                        alt={item.name}
-                        fill
-                        className="object-cover"
-                      />
+                {cart.map((item) => {
+                  const primaryImage = normalizeImages(item.image)[0];
+                  return (
+                    <div key={item.id} className="flex gap-3 py-3">
+                      <div className="relative w-[72px] h-[88px] flex-shrink-0 rounded overflow-hidden bg-stone-100">
+                        {primaryImage ? (
+                          <Image
+                            src={primaryImage}
+                            alt={item.name}
+                            fill
+                            className="object-cover"
+                          />
+                        ) : (
+                          <div className="h-full w-full flex items-center justify-center text-[10px] text-stone-400">
+                            No Image
+                          </div>
+                        )}
+                      </div>
+                      <div className="flex-1 min-w-0 pt-0.5">
+                        <p className="text-[13px] font-medium text-stone-900 truncate">
+                          {item.name}
+                        </p>
+                        <p className="text-xs text-blue-600 font-medium mt-2">
+                          ({item.quantity})
+                        </p>
+                      </div>
+                      <div className="text-right pt-0.5">
+                        <p className="text-[13px] font-medium text-stone-900">
+                          {item.price} MAD
+                        </p>
+                        <button
+                          type="button"
+                          onClick={() => removeFromCart(item.id)}
+                          className="text-[11px] cursor-pointer text-stone-400 underline hover:text-red-400 transition-colors mt-1"
+                        >
+                          Remove
+                        </button>
+                      </div>
                     </div>
-                    <div className="flex-1 min-w-0 pt-0.5">
-                      <p className="text-[13px] font-medium text-stone-900 truncate">
-                        {item.name}
-                      </p>
-                      <p className="text-xs text-blue-600 font-medium mt-2">
-                        ({item.quantity})
-                      </p>
-                    </div>
-                    <div className="text-right pt-0.5">
-                      <p className="text-[13px] font-medium text-stone-900">
-                        {item.price} MAD
-                      </p>
-                      <button
-                        type="button"
-                        onClick={() => removeFromCart(item.id)}
-                        className="text-[11px] cursor-pointer text-stone-400 underline hover:text-red-400 transition-colors mt-1"
-                      >
-                        Remove
-                      </button>
-                    </div>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
 
               <div className="border-t border-stone-100 mt-2 pt-4 space-y-2">

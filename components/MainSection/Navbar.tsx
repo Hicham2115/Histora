@@ -30,6 +30,20 @@ import Image from "next/image";
 import Link from "next/link";
 import { useStore } from "@/components/store/useStore";
 
+const normalizeImages = (value: string[] | string | null | undefined) => {
+  if (!value) return [] as string[];
+  if (Array.isArray(value)) return value.filter(Boolean) as string[];
+  const trimmed = String(value).trim();
+  if (!trimmed) return [] as string[];
+  if (trimmed.includes(",")) {
+    return trimmed
+      .split(",")
+      .map((item) => item.trim())
+      .filter(Boolean);
+  }
+  return [trimmed];
+};
+
 // Navigation links array
 const navigationLinks = [
   { href: "/", label: "Home" },
@@ -248,39 +262,48 @@ export default function Component() {
                 <p className="text-sm text-stone-500">Your cart is empty.</p>
               ) : (
                 <div className="space-y-3 max-h-64 overflow-auto pr-1">
-                  {cart.map((item) => (
-                    <div key={item.id} className="flex items-center gap-3">
-                      <div className="relative h-12 w-12 overflow-hidden rounded bg-stone-100">
-                        <Image
-                          src={item.image?.[0] || item.image}
-                          alt={item.name}
-                          fill
-                          className="object-cover"
-                        />
+                  {cart.map((item) => {
+                    const primaryImage = normalizeImages(item.image)[0];
+                    return (
+                      <div key={item.id} className="flex items-center gap-3">
+                        <div className="relative h-12 w-12 overflow-hidden rounded bg-stone-100">
+                          {primaryImage ? (
+                            <Image
+                              src={primaryImage}
+                              alt={item.name}
+                              fill
+                              className="object-cover"
+                            />
+                          ) : (
+                            <div className="h-full w-full flex items-center justify-center text-[10px] text-stone-400">
+                              No Image
+                            </div>
+                          )}
+                        </div>
+                        <div className="min-w-0 flex-1">
+                          <p className="truncate text-sm font-medium text-stone-800">
+                            {item.name}
+                          </p>
+                          <p className="text-xs text-stone-500">
+                            {item.quantity} × ${item.price}
+                          </p>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <p className="text-xs text-stone-600">
+                            ${(item.price * item.quantity).toFixed(2)}
+                          </p>
+                          <button
+                            type="button"
+                            onClick={() => removeFromCart(item.id)}
+                            className="text-stone-400 hover:text-[#f56464] transition-colors"
+                            aria-label="Remove from cart"
+                          >
+                            <Trash2 size={16} />
+                          </button>
+                        </div>
                       </div>
-                      <div className="min-w-0 flex-1">
-                        <p className="truncate text-sm font-medium text-stone-800">
-                          {item.name}
-                        </p>
-                        <p className="text-xs text-stone-500">
-                          {item.quantity} × ${item.price}
-                        </p>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <p className="text-xs text-stone-600">
-                          ${(item.price * item.quantity).toFixed(2)}
-                        </p>
-                        <button
-                          type="button"
-                          onClick={() => removeFromCart(item.id)}
-                          className="text-stone-400 hover:text-[#f56464] transition-colors"
-                          aria-label="Remove from cart"
-                        >
-                          <Trash2 size={16} />
-                        </button>
-                      </div>
-                    </div>
-                  ))}
+                    );
+                  })}
                 </div>
               )}
               {cart.length > 0 && (

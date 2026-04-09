@@ -65,10 +65,10 @@ function Hero() {
           {/* Vertical accent line — hidden on mobile */}
           <div className="hidden lg:block absolute -left-4 top-0 h-full w-[2px] bg-gradient-to-b from-transparent via-stone-400 to-transparent" />
 
-          <div className="flex flex-col leading-none">
+          <div className="flex flex-col items-center md:items-start leading-[0.9]">
             <SplitText
-              text="Crafted"
-              className="text-[clamp(3rem,10vw,6.5rem)] text-stone-800 tracking-tight"
+              text={`Crafted `}
+              className="text-[clamp(3rem,10vw,6.5rem)] text-stone-800 tracking-tight text-center md:text-left"
               delay={50}
               duration={1.25}
               ease="power3.out"
@@ -81,8 +81,8 @@ function Hero() {
               showCallback
             />
             <SplitText
-              text="  For You"
-              className="text-[clamp(3rem,10vw,6.5rem)] text-stone-800 tracking-tight"
+              text={` For You`}
+              className="text-[clamp(3rem,10vw,6.5rem)] text-stone-800 tracking-tight text-center md:text-left"
               delay={50}
               duration={1.25}
               ease="power3.out"
@@ -94,18 +94,6 @@ function Hero() {
               textAlign="left"
               showCallback
             />
-            {/* <span
-              className="text-[clamp(3rem,10vw,6.5rem)] text-stone-800 tracking-tight"
-              style={{ lineHeight: "0.9" }}
-            >
-              Crafted
-            </span>
-            <span
-              className="text-[clamp(3rem,10vw,6.5rem)] text-stone-800 tracking-tight"
-              style={{ lineHeight: "0.9" }}
-            >
-              For You
-            </span> */}
           </div>
 
           {/* Thin divider */}

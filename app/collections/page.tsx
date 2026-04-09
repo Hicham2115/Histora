@@ -77,6 +77,20 @@ export default function Collections() {
       .filter(Boolean);
   };
 
+  const normalizeImages = (value: string[] | string | null) => {
+    if (!value) return [] as string[];
+    if (Array.isArray(value)) return value.filter(Boolean) as string[];
+    const trimmed = String(value).trim();
+    if (!trimmed) return [] as string[];
+    if (trimmed.includes(",")) {
+      return trimmed
+        .split(",")
+        .map((item) => item.trim())
+        .filter(Boolean);
+    }
+    return [trimmed];
+  };
+
   const sizesList = useMemo(
     () => Array.from(new Set(products.flatMap((p) => normalizeList(p.size)))),
     [products],
@@ -283,28 +297,37 @@ export default function Collections() {
                   </div>
                 </div>
               ))
-            : filteredProducts.map((product) => (
-                <div
-                  key={product.id}
-                  onClick={() => router.push(`/collections/${product.id}`)}
-                >
-                  <div className="bg-gray-100 overflow-hidden cursor-pointer">
-                    <Image
-                      src={product.image?.[0] || "/placeholder.png"}
-                      alt={product.name || "Product"}
-                      width={640}
-                      height={800}
-                      unoptimized
-                      className="h-64 w-full object-cover transition hover:scale-105 sm:h-[280px] lg:h-[320px]"
-                    />
-                  </div>
+            : filteredProducts.map((product) => {
+                const primaryImage = normalizeImages(product.image)[0];
+                return (
+                  <div
+                    key={product.id}
+                    onClick={() => router.push(`/collections/${product.id}`)}
+                  >
+                    <div className="bg-gray-100 overflow-hidden cursor-pointer">
+                      {primaryImage ? (
+                        <Image
+                          src={primaryImage}
+                          alt={product.name || "Product"}
+                          width={640}
+                          height={800}
+                          unoptimized
+                          className="h-64 w-full object-cover transition hover:scale-105 sm:h-[280px] lg:h-[320px]"
+                        />
+                      ) : (
+                        <div className="h-64 w-full flex items-center justify-center text-xs text-gray-400 sm:h-[280px] lg:h-[320px]">
+                          No Image
+                        </div>
+                      )}
+                    </div>
 
-                  <div className="mt-3">
-                    <h3 className="font-medium">{product.name}</h3>
-                    <p className="mt-1">{product.price} MAD</p>
+                    <div className="mt-3">
+                      <h3 className="font-medium">{product.name}</h3>
+                      <p className="mt-1">{product.price} MAD</p>
+                    </div>
                   </div>
-                </div>
-              ))}
+                );
+              })}
         </div>
       </div>
     </div>

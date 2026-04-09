@@ -21,9 +21,25 @@ const normalizeList = (value) => {
     .filter(Boolean);
 };
 
+const normalizeImages = (value) => {
+  if (!value) return [];
+  if (Array.isArray(value)) return value.filter(Boolean);
+  const trimmed = String(value).trim();
+  if (!trimmed) return [];
+  if (trimmed.includes(",")) {
+    return trimmed
+      .split(",")
+      .map((item) => item.trim())
+      .filter(Boolean);
+  }
+  return [trimmed];
+};
+
 function ProductCard({ product, index }) {
   const [hovered, setHovered] = useState(false);
   const router = useRouter();
+  const imageList = normalizeImages(product.image);
+  const primaryImage = imageList[0];
 
   return (
     <div
@@ -42,14 +58,20 @@ function ProductCard({ product, index }) {
       >
         {/* Placeholder silhouette (replace with actual Image component) */}
         <div className="absolute inset-0 flex items-center justify-center">
-          <Image
-            src={product.image?.[0] || ""}
-            alt={product.name || "Product"}
-            width={640}
-            height={640}
-            unoptimized
-            className="object-cover w-full h-full"
-          />
+          {primaryImage ? (
+            <Image
+              src={primaryImage}
+              alt={product.name || "Product"}
+              width={640}
+              height={640}
+              unoptimized
+              className="object-cover w-full h-full"
+            />
+          ) : (
+            <div className="w-full h-full flex items-center justify-center text-xs text-gray-400">
+              No Image
+            </div>
+          )}
         </div>
 
         {/* Quick add button */}
