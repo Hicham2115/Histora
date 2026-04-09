@@ -76,7 +76,7 @@ export default function ProductPage() {
         .eq("id", productId)
         .single();
 
-      console.log("Supabase response for product:", { data, error });
+      // console.log("Supabase response for product:", { data, error });
 
       if (error) {
         console.error(error);
