@@ -53,13 +53,13 @@ export default function CheckoutPage() {
 
   const handleNext = async () => {
     const newErrors: { [key: string]: string } = {};
-    if (!email.includes("@")) newErrors.email = "Enter a valid email";
+    // if (!email.includes("@")) newErrors.email = "Enter a valid email";
     if (phone.length < 7) newErrors.phone = "Enter a valid phone number";
     if (!firstName) newErrors.firstName = "First name is required";
     if (!lastName) newErrors.lastName = "Last name is required";
     if (address.length < 5) newErrors.address = "Address is too short";
     if (city.length < 2) newErrors.city = "City is required";
-    if (postalCode.length < 3) newErrors.postalCode = "Postal code is required";
+    // if (postalCode.length < 3) newErrors.postalCode = "Postal code is required";
 
     setErrors(newErrors);
     if (Object.keys(newErrors).length > 0) return;
@@ -263,11 +263,11 @@ export default function CheckoutPage() {
             {/* Left: form */}
             <div className="space-y-8">
               <section>
-                <p className="text-[11px] font-medium tracking-[0.1em] uppercase text-stone-800 mb-3">
+                {/* <p className="text-[11px] font-medium tracking-[0.1em] uppercase text-stone-800 mb-3">
                   Contact info
-                </p>
+                </p> */}
                 <div className="flex flex-col gap-2.5">
-                  <input
+                  {/* <input
                     type="email"
                     placeholder="Email"
                     value={email}
@@ -276,8 +276,8 @@ export default function CheckoutPage() {
                   />
                   {errors.email && (
                     <p className="text-xs text-red-500">{errors.email}</p>
-                  )}
-
+                  )} */}
+                  {/* 
                   <input
                     type="tel"
                     placeholder="Phone"
@@ -287,13 +287,13 @@ export default function CheckoutPage() {
                   />
                   {errors.phone && (
                     <p className="text-xs text-red-500">{errors.phone}</p>
-                  )}
+                  )} */}
                 </div>
               </section>
 
               <section>
                 <p className="text-[11px] font-medium tracking-[0.1em] uppercase text-stone-800 mb-3">
-                  Shipping address
+                  Contact info
                 </p>
                 <div className="grid grid-cols-2 gap-2.5">
                   <div>
@@ -301,7 +301,7 @@ export default function CheckoutPage() {
                       placeholder="First name"
                       value={firstName}
                       onChange={(e) => setFirstName(e.target.value)}
-                      className="w-full h-11 px-3.5 py-3 bg-white border border-stone-200 rounded text-sm text-stone-900 placeholder:text-stone-300 focus:border-stone-500 outline-none transition-colors"
+                      className="w-full h-11 px-3.5 py-3 bg-white border border-stone-200 rounded text-sm text-stone-900 placeholder:text-stone-400 focus:border-stone-500 outline-none transition-colors"
                     />
                     {errors.firstName && (
                       <p className="text-xs text-red-500">{errors.firstName}</p>
@@ -312,7 +312,7 @@ export default function CheckoutPage() {
                       placeholder="Last name"
                       value={lastName}
                       onChange={(e) => setLastName(e.target.value)}
-                      className="w-full h-11 px-3.5 py-3 bg-white border border-stone-200 rounded text-sm text-stone-900 placeholder:text-stone-300 focus:border-stone-500 outline-none transition-colors"
+                      className="w-full h-11 px-3.5 py-3 bg-white border border-stone-200 rounded text-sm text-stone-900 placeholder:text-stone-400 focus:border-stone-500 outline-none transition-colors"
                     />
                     {errors.lastName && (
                       <p className="text-xs text-red-500">{errors.lastName}</p>
@@ -325,7 +325,7 @@ export default function CheckoutPage() {
                     placeholder="Address"
                     value={address}
                     onChange={(e) => setAddress(e.target.value)}
-                    className="w-full h-11 px-3.5 py-3 bg-white border border-stone-200 rounded text-sm text-stone-900 placeholder:text-stone-300 focus:border-stone-500 outline-none transition-colors"
+                    className="w-full h-11 px-3.5 py-3 bg-white border border-stone-200 rounded text-sm text-stone-900 placeholder:text-stone-400 focus:border-stone-500 outline-none transition-colors"
                   />
                   {errors.address && (
                     <p className="text-xs text-red-500">{errors.address}</p>
@@ -334,7 +334,7 @@ export default function CheckoutPage() {
 
                 <div className="grid grid-cols-2 gap-2.5 mt-2">
                   <Select onValueChange={(value) => setCity(value)}>
-                    <SelectTrigger className="w-full px-3.5 py-3 bg-white border border-stone-200 rounded text-sm text-stone-900 data-[size=default]:h-11.5 data-[placeholder]:text-stone-300 focus:border-stone-500 outline-none transition-colors">
+                    <SelectTrigger className="w-full px-3.5 py-3 bg-white border border-stone-200 rounded text-sm text-stone-900 data-[size=default]:h-11.5 data-[placeholder]:text-stone-400 focus:border-stone-500 outline-none transition-colors">
                       <SelectValue placeholder="Select a city" />
                     </SelectTrigger>
 
@@ -374,7 +374,18 @@ export default function CheckoutPage() {
                     </SelectContent>
                   </Select>
 
-                  <div>
+                  <input
+                    type="tel"
+                    placeholder="Phone"
+                    value={phone}
+                    onChange={(e) => setPhone(e.target.value)}
+                    className="w-full h-11 px-3.5 py-3 bg-white border border-stone-200 rounded text-sm text-stone-900 placeholder:text-stone-400 focus:border-stone-500 outline-none transition-colors"
+                  />
+                  {errors.phone && (
+                    <p className="text-xs text-red-500">{errors.phone}</p>
+                  )}
+
+                  {/* <div>
                     <input
                       placeholder="Postal code"
                       value={postalCode}
@@ -386,16 +397,16 @@ export default function CheckoutPage() {
                         {errors.postalCode}
                       </p>
                     )}
-                  </div>
+                  </div> */}
                 </div>
               </section>
 
               <button
                 type="button"
                 onClick={handleNext}
-                className="w-full flex items-center justify-between px-5 py-4 bg-stone-200 hover:bg-stone-900 hover:text-white text-stone-900 rounded text-[11px] font-medium tracking-[0.12em] uppercase transition-colors group"
+                className="w-full flex cursor-pointer items-center justify-between px-5 py-4 bg-stone-200 hover:bg-stone-900 hover:text-white text-stone-900 rounded text-[11px] font-medium tracking-[0.12em] uppercase transition-colors group"
               >
-                <span>Shipping</span>
+                <span>Confirm Order</span>
                 <svg
                   width="18"
                   height="18"

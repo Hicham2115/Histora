@@ -35,7 +35,6 @@ export async function POST(req: Request) {
       html: `
         <h2>New Order</h2>
         <p><strong>Name:</strong> ${data.firstName} ${data.lastName}</p>
-        <p><strong>Email:</strong> ${data.email}</p>
         <p><strong>Phone:</strong> ${data.phone}</p>
         <p><strong>Address:</strong> ${data.address}, ${data.city}, ${data.postalCode}</p>
         <h3>Items:</h3>

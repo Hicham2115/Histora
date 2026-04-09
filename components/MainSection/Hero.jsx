@@ -8,6 +8,7 @@ import {
 } from "@/components/ui/carousel";
 
 import { Saira_Stencil_One, Noto_Sans } from "next/font/google";
+import { useEffect, useState } from "react";
 
 import img1 from "@/app/assets/1.png";
 import img2 from "@/app/assets/2.png";
@@ -28,6 +29,54 @@ const notoSans = Noto_Sans({
 
 function Hero() {
   const router = useRouter();
+  const [carouselApi, setCarouselApi] = useState(null);
+
+  useEffect(() => {
+    if (!carouselApi) return;
+
+    const mediaQuery = window.matchMedia("(max-width: 640px)");
+    let intervalId;
+
+    const startAutoplay = () => {
+      if (intervalId) return;
+      intervalId = window.setInterval(() => {
+        if (!carouselApi) return;
+        if (carouselApi.canScrollNext()) {
+          carouselApi.scrollNext();
+        } else {
+          carouselApi.scrollTo(0);
+        }
+      }, 3500);
+    };
+
+    const stopAutoplay = () => {
+      if (intervalId) {
+        window.clearInterval(intervalId);
+        intervalId = undefined;
+      }
+    };
+
+    const handleChange = () => {
+      stopAutoplay();
+      if (mediaQuery.matches) startAutoplay();
+    };
+
+    handleChange();
+    if (mediaQuery.addEventListener) {
+      mediaQuery.addEventListener("change", handleChange);
+    } else {
+      mediaQuery.addListener(handleChange);
+    }
+
+    return () => {
+      stopAutoplay();
+      if (mediaQuery.removeEventListener) {
+        mediaQuery.removeEventListener("change", handleChange);
+      } else {
+        mediaQuery.removeListener(handleChange);
+      }
+    };
+  }, [carouselApi]);
 
   return (
     <div className="relative min-h-screen overflow-hidden">
@@ -138,7 +187,11 @@ function Hero() {
           {/* Decorative offset box — hidden on small screens */}
           <div className="hidden sm:block absolute top-4 -right-4 w-full h-full border border-stone-300/60 rounded-none z-0" />
 
-          <Carousel opts={{ align: "start" }} className="relative z-10">
+          <Carousel
+            opts={{ align: "start", loop: true }}
+            className="relative z-10"
+            setApi={setCarouselApi}
+          >
             <CarouselContent className="-ml-2">
               {[img1, img2].map((img, index) => (
                 <CarouselItem
