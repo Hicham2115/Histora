@@ -16,16 +16,8 @@ const notoSans = Noto_Sans({
   weight: ["300", "400", "600"],
 });
 
-type Product = {
-  id: number;
-  name: string | null;
-  price: number | null;
-  description: string | null;
-  image: string | null;
-  category: string | null;
-};
 
-function ProductCard({ product }: { product: Product }) {
+function ProductCard({ product }) {
   const [hovered, setHovered] = useState(false);
   const router = useRouter();
 
@@ -101,9 +93,9 @@ function ProductSkeleton() {
 
 function NewArrivals() {
   const [page, setPage] = useState(0);
-  const [products, setProducts] = useState<Product[]>([]);
+  const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const [error, setError] = useState(null);
 
   const router = useRouter();
 
