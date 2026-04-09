@@ -48,6 +48,8 @@ export default function Component() {
     0,
   );
 
+  console.log(cart);
+
   return (
     <header className="fixed top-0 left-0 right-0 border-b px-4 md:px-6 z-50 backdrop-blur">
       <div className="flex h-16 items-center justify-between gap-4">
