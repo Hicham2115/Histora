@@ -240,9 +240,9 @@ export default function Collections() {
       <div className="flex-1">
         {/* HEADER */}
         <div className="mb-6 mt-6 lg:mt-20">
-          <p className="text-sm text-muted-foreground">Home / Products</p>
+          <p className="text-sm text-muted-foreground">Home / Collections</p>
           <h1 className={`text-3xl mt-2 ${sairaStencil.className}`}>
-            PRODUCTS
+            COLLECTIONS
           </h1>
         </div>
 
