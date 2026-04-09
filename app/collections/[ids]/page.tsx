@@ -497,7 +497,7 @@ export default function ProductPage() {
                   id: product.id,
                   name: product.name || "",
                   price: product.price || 0,
-                  image: product.image || "",
+                  image: thumbnails[0] || "",
                   quantity,
                   size: selectedSize ?? null,
                   color: selectedColor ?? null,
