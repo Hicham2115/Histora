@@ -41,7 +41,7 @@ function ProductCard({ product }: { product: Product }) {
       >
         {product.image ? (
           <Image
-            src={product.image}
+            src={product.image?.[0]}
             alt={product.name || "product"}
             fill
             className="object-cover"

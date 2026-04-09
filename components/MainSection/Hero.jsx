@@ -28,7 +28,7 @@ function Hero() {
   const router = useRouter();
 
   return (
-    <div className="relative h-screen overflow-hidden ">
+    <div className="relative min-h-screen overflow-hidden">
       {/* Subtle grain texture overlay */}
       <div
         className="pointer-events-none absolute inset-0 z-10 opacity-[0.03]"
@@ -39,12 +39,12 @@ function Hero() {
         }}
       />
 
-      {/* Decorative vertical rule */}
-      <div className="absolute left-1/2 top-0 h-full w-px bg-stone-300/40 z-0" />
+      {/* Decorative vertical rule — hidden on mobile */}
+      <div className="hidden md:block absolute left-1/2 top-0 h-full w-px bg-stone-300/40 z-0" />
 
       {/* Top label bar */}
       <div
-        className={`${notoSans.className} absolute top-6 left-0 right-0 flex justify-between items-center px-8 md:px-16 z-20`}
+        className={`${notoSans.className} absolute top-6 left-0 right-0 flex justify-between items-center px-6 sm:px-8 md:px-16 z-20`}
       >
         <span className="text-xs tracking-[0.3em] uppercase text-stone-400">
           Summer {new Date().getFullYear()}
@@ -56,42 +56,43 @@ function Hero() {
 
       {/* Main layout */}
       <div
-        className={`${sairaStencil.className} h-full flex items-center flex-wrap justify-between px-8 md:px-16 gap-8`}
+        className={`${sairaStencil.className} min-h-screen flex flex-col lg:flex-row items-center justify-center lg:justify-between px-6 sm:px-8 md:px-16 pt-24 pb-16 gap-10 lg:gap-8`}
       >
         {/* LEFT TEXT */}
-        <div className="relative z-20 flex flex-col gap-6 max-w-sm">
-          {/* Vertical accent line */}
-          <div className="absolute -left-4 top-0 h-full w-[2px] bg-gradient-to-b from-transparent via-stone-400 to-transparent" />
+        <div className="relative z-20 flex flex-col gap-6 w-full max-w-sm mx-auto lg:mx-0 text-center lg:text-left">
+          {/* Vertical accent line — hidden on mobile */}
+          <div className="hidden lg:block absolute -left-4 top-0 h-full w-[2px] bg-gradient-to-b from-transparent via-stone-400 to-transparent" />
 
           <div className="flex flex-col leading-none">
             <span
-              className="text-[clamp(3.5rem,8vw,6.5rem)] text-stone-800 tracking-tight"
+              className="text-[clamp(3rem,10vw,6.5rem)] text-stone-800 tracking-tight"
               style={{ lineHeight: "0.9" }}
             >
-              New
+              Crafted
             </span>
             <span
-              className="text-[clamp(3.5rem,8vw,6.5rem)] text-stone-800 tracking-tight"
+              className="text-[clamp(3rem,10vw,6.5rem)] text-stone-800 tracking-tight"
               style={{ lineHeight: "0.9" }}
             >
-              Collection
+              For You
             </span>
           </div>
 
           {/* Thin divider */}
-          <div className="w-12 h-px bg-stone-400" />
+          <div className="w-12 h-px bg-stone-400 mx-auto lg:mx-0" />
 
           <p
-            className={`${notoSans.className} text-sm font-light leading-relaxed text-stone-500 `}
+            className={`${notoSans.className} text-sm font-light leading-relaxed text-stone-500`}
           >
-            Explore our curated collection of clothing, mugs, and wall art —
-            every piece designed to express your personality, inspire your
-            space, and tell a story that's uniquely yours.
+            Style isn't just what you put on — it's what you put out into the
+            world. Our collection brings together clothing, mugs, and wall art
+            that speak before you do, stay long after you leave, and make every
+            ordinary moment feel worth remembering.
           </p>
 
           {/* CTA */}
           <button
-            className={`${notoSans.className} group relative w-fit text-xs tracking-[0.25em] uppercase font-light text-stone-800 border border-stone-800 px-6 py-3 overflow-hidden transition-all duration-300 hover:text-[#f5f0ea] cursor-pointer`}
+            className={`${notoSans.className} group relative w-fit text-xs tracking-[0.25em] uppercase font-light text-stone-800 border border-stone-800 px-6 py-3 overflow-hidden transition-all duration-300 hover:text-[#f5f0ea] cursor-pointer mx-auto lg:mx-0`}
             onClick={() => {
               router.push("collections");
             }}
@@ -103,17 +104,17 @@ function Hero() {
 
         {/* RIGHT CAROUSEL */}
         <div className="relative z-20 w-full lg:w-[55%] max-w-2xl">
-          {/* Decorative offset box */}
-          <div className="absolute top-4 -right-4 w-full h-full border border-stone-300/60 rounded-none z-0" />
+          {/* Decorative offset box — hidden on small screens */}
+          <div className="hidden sm:block absolute top-4 -right-4 w-full h-full border border-stone-300/60 rounded-none z-0" />
 
-          <Carousel
-            opts={{ align: "start" }}
-            className="relative z-10 lg:mt-30 mt-40"
-          >
+          <Carousel opts={{ align: "start" }} className="relative z-10">
             <CarouselContent className="-ml-2">
               {[img1, img2].map((img, index) => (
-                <CarouselItem key={index} className="basis-1/2 pl-2">
-                  <div className="group relative w-full h-[360px] md:h-[480px] overflow-hidden bg-stone-200">
+                <CarouselItem
+                  key={index}
+                  className="basis-full sm:basis-1/2 pl-2"
+                >
+                  <div className="group relative w-full h-[420px] sm:h-[420px] md:h-[480px] overflow-hidden bg-stone-200">
                     <Image
                       src={img}
                       alt={`Collection piece ${index + 1}`}

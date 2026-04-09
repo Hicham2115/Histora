@@ -42,7 +42,7 @@ function ProductCard({ product, index }) {
         {/* Placeholder silhouette (replace with actual Image component) */}
         <div className="absolute inset-0 flex items-center justify-center">
           <Image
-            src={product.image || ""}
+            src={product.image?.[0] || ""}
             alt={product.name || "Product"}
             width={640}
             height={640}

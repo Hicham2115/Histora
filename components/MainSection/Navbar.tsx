@@ -250,7 +250,7 @@ export default function Component() {
                     <div key={item.id} className="flex items-center gap-3">
                       <div className="relative h-12 w-12 overflow-hidden rounded bg-stone-100">
                         <Image
-                          src={item.image}
+                          src={item.image?.[0]}
                           alt={item.name}
                           fill
                           className="object-cover"

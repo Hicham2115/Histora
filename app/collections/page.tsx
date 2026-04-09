@@ -24,7 +24,7 @@ type Product = {
   name: string | null;
   price: number | null;
   description: string | null;
-  image: string | null;
+  image: string[] | null;
   color: string | null;
   size: string | null;
   category: string | null;
@@ -52,6 +52,8 @@ export default function Collections() {
           "id, name, price, description, image, color, size, category, in_stock",
         )
         .order("id", { ascending: true });
+
+      console.log("Fetched products:", data);
 
       if (error) {
         console.error(error);
@@ -288,7 +290,7 @@ export default function Collections() {
                 >
                   <div className="bg-gray-100 overflow-hidden cursor-pointer">
                     <Image
-                      src={product.image || ""}
+                      src={product.image?.[0] || "/placeholder.png"}
                       alt={product.name || "Product"}
                       width={640}
                       height={800}

@@ -21,7 +21,7 @@ type Product = {
   name: string | null;
   price: number | null;
   description: string | null;
-  image: string | null;
+  image: string[] | null;
   color: string | null;
   size: string | null;
   category: string | null;
@@ -76,6 +76,8 @@ export default function ProductPage() {
         .eq("id", productId)
         .single();
 
+      console.log("Supabase response for product:", { data, error });
+
       if (error) {
         console.error(error);
         setProduct(null);
@@ -125,9 +127,7 @@ export default function ProductPage() {
 
   const isWishlisted = wishlist.some((item) => item.id === product.id);
 
-  const thumbnails = product.image
-    ? [product.image, product.image, product.image, product.image]
-    : [];
+  const thumbnails = product.image ?? [];
 
   return (
     <div className="min-h-screen p-4 sm:p-6 md:p-8 mt-16">
@@ -138,7 +138,7 @@ export default function ProductPage() {
           <div className="rounded overflow-hidden aspect-[4/5] relative w-full">
             {product.image && (
               <Image
-                src={product.image}
+                src={thumbnails[activeImage] || thumbnails[0]}
                 alt={product.name || "Product"}
                 fill
                 unoptimized
@@ -182,7 +182,7 @@ export default function ProductPage() {
                       id: product.id,
                       name: product.name || "",
                       price: product.price || 0,
-                      image: product.image || "",
+                      image: thumbnails[0] || "",
                       quantity,
                     })
               }
@@ -308,7 +308,7 @@ export default function ProductPage() {
                   id: product.id,
                   name: product.name || "",
                   price: product.price || 0,
-                  image: product.image || "",
+                  image: thumbnails[0] || "",
                   quantity,
                   size: selectedSize ?? null,
                   color: selectedColor ?? null,
@@ -329,7 +329,7 @@ export default function ProductPage() {
           <div className="rounded overflow-hidden aspect-[4/5] relative">
             {product.image && (
               <Image
-                src={product.image}
+                src={thumbnails[activeImage] || thumbnails[0]}
                 alt={product.name || "Product"}
                 fill
                 unoptimized
@@ -371,7 +371,7 @@ export default function ProductPage() {
                       id: product.id,
                       name: product.name || "",
                       price: product.price || 0,
-                      image: product.image || "",
+                      image: thumbnails[0] || "",
                       quantity,
                     })
               }
