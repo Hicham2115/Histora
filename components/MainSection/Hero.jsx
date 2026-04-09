@@ -9,8 +9,8 @@ import {
 
 import { Saira_Stencil_One, Noto_Sans } from "next/font/google";
 
-import img1 from "@/app/assets/78ed5049ffa1fdb4f90bf2df4a83f27f.jpg";
-import img2 from "@/app/assets/2bd760b75c0486cf71264531bcad6673.jpg";
+import img1 from "@/app/assets/1.png";
+import img2 from "@/app/assets/2.png";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 
@@ -59,7 +59,7 @@ function Hero() {
         className={`${sairaStencil.className} min-h-screen flex flex-col lg:flex-row items-center justify-center lg:justify-between px-6 sm:px-8 md:px-16 pt-24 pb-16 gap-10 lg:gap-8`}
       >
         {/* LEFT TEXT */}
-        <div className="relative z-20 flex flex-col gap-6 w-full max-w-sm mx-auto lg:mx-0 text-center lg:text-left">
+        <div className="relative z-20 flex flex-col gap-6 w-full max-w-xl mx-auto lg:mx-0 text-center lg:text-left">
           {/* Vertical accent line — hidden on mobile */}
           <div className="hidden lg:block absolute -left-4 top-0 h-full w-[2px] bg-gradient-to-b from-transparent via-stone-400 to-transparent" />
 

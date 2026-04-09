@@ -130,9 +130,9 @@ export default function Component() {
         <div className="flex items-center">
           <Image
             alt="Histora Logo"
-            height={80}
+            height={100}
             src={Logo}
-            width={80}
+            width={100}
             className=" cursor-pointer "
           />
         </div>
