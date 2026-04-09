@@ -411,7 +411,7 @@ export default function CheckoutPage() {
                   <div key={item.id} className="flex gap-3 py-3">
                     <div className="relative w-[72px] h-[88px] flex-shrink-0 rounded overflow-hidden bg-stone-100">
                       <Image
-                        src={item.image?.[0]}
+                          src={item.image?.[0] || item.image}
                         alt={item.name}
                         fill
                         className="object-cover"
