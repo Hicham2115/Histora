@@ -15,7 +15,21 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+} from "@/components/ui/command";
 
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+
+import { Check, ChevronsUpDown } from "lucide-react";
 const normalizeImages = (value: string[] | string | null | undefined) => {
   if (!value) return [] as string[];
   if (Array.isArray(value)) return value.filter(Boolean) as string[];
@@ -53,6 +67,7 @@ export default function CheckoutPage() {
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [open, setOpen] = useState(false);
 
   const handleNext = async () => {
     const newErrors: { [key: string]: string } = {};
@@ -60,7 +75,7 @@ export default function CheckoutPage() {
     if (phone.length < 7) newErrors.phone = "Enter a valid phone number";
     if (!firstName) newErrors.firstName = "First name is required";
     if (!lastName) newErrors.lastName = "Last name is required";
-    if (address.length < 5) newErrors.address = "Address is too short";
+    // if (address.length < 5) newErrors.address = "Address is too short";
     if (city.length < 2) newErrors.city = "City is required";
     // if (postalCode.length < 3) newErrors.postalCode = "Postal code is required";
 
@@ -340,47 +355,84 @@ export default function CheckoutPage() {
                 </div>
 
                 <div className="grid grid-cols-2 gap-2.5 mt-2">
-                  <Select onValueChange={(value) => setCity(value)}>
-                    <SelectTrigger className="w-full px-3.5 py-3 bg-white border border-stone-200 rounded text-sm text-stone-900 data-[size=default]:h-11.5 data-[placeholder]:text-stone-400 focus:border-stone-500 outline-none transition-colors">
-                      <SelectValue placeholder="Select a city" />
-                    </SelectTrigger>
+                  <Popover open={open} onOpenChange={setOpen}>
+                    <PopoverTrigger asChild>
+                      <button
+                        type="button"
+                        className="w-full h-11 px-3.5 flex items-center justify-between bg-white border border-stone-200 rounded text-sm text-stone-900"
+                      >
+                        {city
+                          ? city.charAt(0).toUpperCase() + city.slice(1)
+                          : "Select a city"}
+                        <ChevronsUpDown className="w-4 h-4 opacity-50" />
+                      </button>
+                    </PopoverTrigger>
 
-                    <SelectContent className="bg-white border border-stone-200 text-stone-900 max-h-80">
-                      <SelectGroup>
-                        <SelectItem value="casablanca">Casablanca</SelectItem>
-                        <SelectItem value="rabat">Rabat</SelectItem>
-                        <SelectItem value="marrakesh">Marrakesh</SelectItem>
-                        <SelectItem value="fes">Fes</SelectItem>
-                        <SelectItem value="tangier">Tangier</SelectItem>
-                        <SelectItem value="agadir">Agadir</SelectItem>
-                        <SelectItem value="meknes">Meknes</SelectItem>
-                        <SelectItem value="oujda">Oujda</SelectItem>
-                        <SelectItem value="kenitra">Kenitra</SelectItem>
-                        <SelectItem value="tetouan">Tetouan</SelectItem>
-                        <SelectItem value="safi">Safi</SelectItem>
-                        <SelectItem value="el_jadida">El Jadida</SelectItem>
-                        <SelectItem value="beni_mellal">Beni Mellal</SelectItem>
-                        <SelectItem value="nador">Nador</SelectItem>
-                        <SelectItem value="taza">Taza</SelectItem>
-                        <SelectItem value="khouribga">Khouribga</SelectItem>
-                        <SelectItem value="settat">Settat</SelectItem>
-                        <SelectItem value="larache">Larache</SelectItem>
-                        <SelectItem value="khemisset">Khemisset</SelectItem>
-                        <SelectItem value="guelmim">Guelmim</SelectItem>
-                        <SelectItem value="errachidia">Errachidia</SelectItem>
-                        <SelectItem value="ouarzazate">Ouarzazate</SelectItem>
-                        <SelectItem value="taroudant">Taroudant</SelectItem>
-                        <SelectItem value="tinghir">Tinghir</SelectItem>
-                        <SelectItem value="ifran">Ifrane</SelectItem>
-                        <SelectItem value="azrou">Azrou</SelectItem>
-                        <SelectItem value="dakhla">Dakhla</SelectItem>
-                        <SelectItem value="laayoune">Laayoune</SelectItem>
-                        <SelectItem value="smara">Smara</SelectItem>
-                        <SelectItem value="boujdour">Boujdour</SelectItem>
-                      </SelectGroup>
-                    </SelectContent>
-                  </Select>
+                    <PopoverContent
+                      side="bottom"
+                      align="start"
+                      sideOffset={8}
+                      avoidCollisions={false}
+                      className="w-full max-h-64 overflow-hidden p-0"
+                    >
+                      <Command>
+                        <CommandInput placeholder="Search city..." />
 
+                        <CommandEmpty>No city found.</CommandEmpty>
+
+                        <CommandGroup className="max-h-56 overflow-y-auto">
+                          {[
+                            "casablanca",
+                            "rabat",
+                            "marrakesh",
+                            "fes",
+                            "tangier",
+                            "agadir",
+                            "meknes",
+                            "oujda",
+                            "kenitra",
+                            "tetouan",
+                            "safi",
+                            "el_jadida",
+                            "beni_mellal",
+                            "nador",
+                            "taza",
+                            "khouribga",
+                            "settat",
+                            "larache",
+                            "khemisset",
+                            "guelmim",
+                            "errachidia",
+                            "ouarzazate",
+                            "taroudant",
+                            "tinghir",
+                            "ifran",
+                            "azrou",
+                            "dakhla",
+                            "laayoune",
+                            "smara",
+                            "boujdour",
+                          ].map((c) => (
+                            <CommandItem
+                              key={c}
+                              value={c}
+                              onSelect={(currentValue) => {
+                                setCity(currentValue);
+                                setOpen(false);
+                              }}
+                            >
+                              {c}
+                              <Check
+                                className={`ml-auto h-4 w-4 ${
+                                  city === c ? "opacity-100" : "opacity-0"
+                                }`}
+                              />
+                            </CommandItem>
+                          ))}
+                        </CommandGroup>
+                      </Command>
+                    </PopoverContent>
+                  </Popover>
                   <input
                     type="tel"
                     placeholder="Phone"
