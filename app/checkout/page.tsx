@@ -369,10 +369,10 @@ export default function CheckoutPage() {
                     </PopoverTrigger>
 
                     <PopoverContent
-                      side="bottom"
-                      align="start"
-                      sideOffset={8}
-                      avoidCollisions={false}
+                      // side="bottom"
+                      // align="start"
+                      // sideOffset={8}
+                      // avoidCollisions={false}
                       className="w-full max-h-64 overflow-hidden p-0"
                     >
                       <Command>

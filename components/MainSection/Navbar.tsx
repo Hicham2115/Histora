@@ -285,12 +285,12 @@ export default function Component() {
                             {item.name}
                           </p>
                           <p className="text-xs text-stone-500">
-                            {item.quantity} × ${item.price}
+                            {item.quantity} × {item.price} MAD
                           </p>
                         </div>
                         <div className="flex items-center gap-2">
                           <p className="text-xs text-stone-600">
-                            ${(item.price * item.quantity).toFixed(2)}
+                            {(item.price * item.quantity).toFixed(2)} MAD
                           </p>
                           <button
                             type="button"
@@ -310,7 +310,7 @@ export default function Component() {
                 <div className="mt-4 flex items-center justify-between">
                   <span className="text-xs text-stone-500">Total</span>
                   <span className="text-sm font-medium">
-                    ${cartTotal.toFixed(2)}
+                    {cartTotal.toFixed(2)} MAD
                   </span>
                 </div>
               )}
