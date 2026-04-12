@@ -470,9 +470,9 @@ export default function ProductPage() {
                 Find your size
               </button>
               <span className="text-gray-300 text-xs">|</span>
-              <button className="text-[11px] uppercase tracking-wider text-gray-500 border-b border-gray-400 hover:text-black transition-colors">
+              {/* <button className="text-[11px] uppercase tracking-wider text-gray-500 border-b border-gray-400 hover:text-black transition-colors">
                 Measurement guide
-              </button>
+              </button> */}
             </div>
 
             {/* Quantity selector */}
