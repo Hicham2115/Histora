@@ -49,7 +49,7 @@ export async function POST(req: Request) {
                   ? `<img src="${primaryImage}" alt="${item.name}" width="80" height="80" style="object-fit: cover; border: 1px solid #ccc; margin-right: 10px; vertical-align: middle;" />`
                   : ""
               }
-              <span>${item.name} x ${item.quantity} - $${item.price}</span>
+              <span>${item.name} x ${item.quantity} - $${item.price}${item.size ? ` (Size: ${item.size})` : ""}</span>
             </li>
           `;
             })
