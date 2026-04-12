@@ -7,10 +7,10 @@ import {
 } from "next/font/google";
 import Image from "next/image";
 
-import img3 from "@/app/assets/asas.jpeg";
-import img4 from "@/app/assets/dde.jpeg";
-import img5 from "@/app/assets/Ryderwear Mens Pursuit Oversized T-Shirt - Black Stonewash M.jpeg";
-import img6 from "@/app/assets/black plain tshirt.jpeg";
+import img3 from "@/app/assets/Better together.jpeg";
+import img4 from "@/app/assets/Футболка с принтом.jpeg";
+import img5 from "@/app/assets/Archangel Apparel.jpeg";
+import img6 from "@/app/assets/Akieron Tees.jpeg";
 import SplitText from "@/components/SplitText";
 import TextType from "@/components/TextType";
 
