@@ -1,7 +1,7 @@
 "use client";
 import { useParams } from "next/navigation";
 import Image from "next/image";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState, type MouseEvent } from "react";
 import { useStore } from "@/components/store/useStore";
 import { supabase } from "@/lib/supabase";
 import { toast } from "sonner";
@@ -64,6 +64,9 @@ export default function ProductPage() {
   const [loading, setLoading] = useState(true);
 
   const [activeImage, setActiveImage] = useState(0);
+  const [isZoomOpen, setIsZoomOpen] = useState(false);
+  const [zoomLevel, setZoomLevel] = useState(1);
+  const [zoomOrigin, setZoomOrigin] = useState("50% 50%");
   const [selectedSize, setSelectedSize] = useState<string | null>(null);
   const [selectedColor, setSelectedColor] = useState<string | null>(null);
   const [quantity, setQuantity] = useState(1);
@@ -142,6 +145,27 @@ export default function ProductPage() {
   const isWishlisted = wishlist.some((item) => item.id === product.id);
 
   const thumbnails = normalizeImages(product?.image ?? null);
+  const activeImageSrc = thumbnails[activeImage] || thumbnails[0] || "";
+  const canZoom = Boolean(activeImageSrc);
+
+  const handleOpenZoom = () => {
+    if (!canZoom) return;
+    setZoomLevel(1);
+    setZoomOrigin("50% 50%");
+    setIsZoomOpen(true);
+  };
+
+  const handleZoomToggle = () => {
+    setZoomLevel((prev) => (prev === 1 ? 2 : 1));
+  };
+
+  const handleZoomMove = (event: MouseEvent<HTMLDivElement>) => {
+    if (zoomLevel === 1) return;
+    const rect = event.currentTarget.getBoundingClientRect();
+    const x = ((event.clientX - rect.left) / rect.width) * 100;
+    const y = ((event.clientY - rect.top) / rect.height) * 100;
+    setZoomOrigin(`${x}% ${y}%`);
+  };
 
   return (
     <div className="min-h-screen p-4 sm:p-6 md:p-8 mt-16">
@@ -152,13 +176,35 @@ export default function ProductPage() {
           <div className="rounded overflow-hidden aspect-[4/5] relative w-full">
             {thumbnails.length > 0 && (
               <Image
-                src={thumbnails[activeImage] || thumbnails[0]}
+                src={activeImageSrc}
                 alt={product.name || "Product"}
                 fill
                 unoptimized
                 className="object-cover"
               />
             )}
+            <button
+              type="button"
+              onClick={handleOpenZoom}
+              className="absolute bottom-3 right-3 w-9 h-9 rounded-full bg-white/90 text-black shadow hover:bg-white transition-colors flex items-center justify-center"
+              aria-label="Open zoom view"
+              disabled={!canZoom}
+            >
+              <svg
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="1.7"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                aria-hidden="true"
+              >
+                <circle cx="11" cy="11" r="7" />
+                <path d="M21 21l-4.35-4.35" />
+              </svg>
+            </button>
           </div>
 
           {/* Thumbnail strip — horizontal on mobile */}
@@ -343,13 +389,35 @@ export default function ProductPage() {
           <div className="rounded overflow-hidden aspect-[4/5] relative">
             {thumbnails.length > 0 && (
               <Image
-                src={thumbnails[activeImage] || thumbnails[0]}
+                src={activeImageSrc}
                 alt={product.name || "Product"}
                 fill
                 unoptimized
                 className="object-cover"
               />
             )}
+            <button
+              type="button"
+              onClick={handleOpenZoom}
+              className="absolute bottom-3 right-3 w-9 h-9 rounded-full bg-white/90 text-black shadow hover:bg-white transition-colors flex items-center justify-center"
+              aria-label="Open zoom view"
+              disabled={!canZoom}
+            >
+              <svg
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="1.7"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                aria-hidden="true"
+              >
+                <circle cx="11" cy="11" r="7" />
+                <path d="M21 21l-4.35-4.35" />
+              </svg>
+            </button>
           </div>
 
           {/* Thumbnail strip — vertical */}
@@ -526,6 +594,40 @@ export default function ProductPage() {
           </div>
         </div>
       </div>
+
+      {isZoomOpen && canZoom && (
+        <div
+          className="fixed inset-0 z-50 bg-white/10 backdrop-blur-sm flex items-center justify-center p-4"
+          role="dialog"
+          aria-modal="true"
+        >
+          <button
+            type="button"
+            onClick={() => setIsZoomOpen(false)}
+            className="absolute inset-0 z-0"
+            aria-label="Close zoom view"
+          />
+          <div
+            className={`relative z-10 w-full max-w-5xl h-[80vh] overflow-hidden ${
+              zoomLevel === 1 ? "cursor-zoom-in" : "cursor-zoom-out"
+            }`}
+            onMouseMove={handleZoomMove}
+            onClick={handleZoomToggle}
+          >
+            <Image
+              src={activeImageSrc}
+              alt={product.name || "Product"}
+              fill
+              unoptimized
+              className="object-contain"
+              style={{
+                transform: `scale(${zoomLevel})`,
+                transformOrigin: zoomOrigin,
+              }}
+            />
+          </div>
+        </div>
+      )}
     </div>
   );
 }
