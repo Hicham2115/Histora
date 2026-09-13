@@ -4,6 +4,8 @@ import "./globals.css";
 import Navbar from "@/components/MainSection/Navbar";
 import AnnouncementBar from "@/components/AnnouncementBar";
 import Grainient from "@/components/Grainient";
+import SmoothScroll from "@/components/SmoothScroll";
+import QueryProvider from "@/components/QueryProvider";
 import { Toaster } from "sonner";
 
 const geistSans = Geist({
@@ -73,36 +75,39 @@ export default function RootLayout({
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col relative text-black">
-        <div className="fixed inset-0 -z-10">
-          <Grainient
-            color1="#c0bfc0"
-            color2="#dfdddd"
-            color3="#b8b7b7"
-            timeSpeed={0.25}
-            colorBalance={0}
-            warpStrength={1}
-            warpFrequency={5}
-            warpSpeed={2}
-            warpAmplitude={50}
-            blendAngle={0}
-            blendSoftness={0.05}
-            rotationAmount={500}
-            noiseScale={2}
-            grainAmount={0.1}
-            grainScale={2}
-            grainAnimated={false}
-            contrast={1.5}
-            gamma={1}
-            saturation={1}
-            centerX={0}
-            centerY={0}
-            zoom={0.9}
-          />
-        </div>
-        <AnnouncementBar />
-        <Navbar />
-        {children}
-        <Toaster />
+        <QueryProvider>
+          <SmoothScroll />
+          <div className="fixed inset-0 -z-10">
+            <Grainient
+              color1="#c0bfc0"
+              color2="#dfdddd"
+              color3="#b8b7b7"
+              timeSpeed={0.25}
+              colorBalance={0}
+              warpStrength={1}
+              warpFrequency={5}
+              warpSpeed={2}
+              warpAmplitude={50}
+              blendAngle={0}
+              blendSoftness={0.05}
+              rotationAmount={500}
+              noiseScale={2}
+              grainAmount={0.1}
+              grainScale={2}
+              grainAnimated={false}
+              contrast={1.5}
+              gamma={1}
+              saturation={1}
+              centerX={0}
+              centerY={0}
+              zoom={0.9}
+            />
+          </div>
+          <AnnouncementBar />
+          <Navbar />
+          {children}
+          <Toaster />
+        </QueryProvider>
       </body>
     </html>
   );

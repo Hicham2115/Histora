@@ -155,20 +155,20 @@ export default function Component() {
             <NavigationMenuList className="gap-6">
               {navigationLinks.map((link) => {
                 return (
-                  <NavigationMenuItem key={link.label} className="group">
+                  <NavigationMenuItem key={link.label} className="group/navlink">
                     <NavigationMenuLink
                       className={cn(
-                        "relative flex-row items-center py-1.5 text-xs font-light tracking-[0.2em] uppercase transition-all duration-300 group-hover:tracking-[0.3em] hover:bg-transparent",
+                        "relative flex-row items-center py-1.5 text-xs font-light tracking-[0.2em] uppercase transition-all duration-300 group-hover/navlink:tracking-[0.3em] hover:bg-transparent",
                         solid
-                          ? "text-stone-600 group-hover:text-stone-900"
-                          : "text-white/85 group-hover:text-white",
+                          ? "text-stone-600 group-hover/navlink:text-stone-900"
+                          : "text-white/85 group-hover/navlink:text-white",
                       )}
                       href={link.href}
                     >
                       <span>{link.label}</span>
                       <span
                         className={cn(
-                          "absolute -bottom-0.5 left-0 h-px w-0 transition-all duration-300 ease-out group-hover:w-full",
+                          "absolute -bottom-0.5 left-0 h-px w-0 transition-all duration-300 ease-out group-hover/navlink:w-full",
                           solid ? "bg-stone-900" : "bg-white",
                         )}
                       />

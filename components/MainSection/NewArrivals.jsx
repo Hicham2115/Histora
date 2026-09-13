@@ -4,10 +4,10 @@ import React, { useState } from "react";
 import { Playfair_Display, Noto_Sans } from "next/font/google";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { products as staticProducts } from "@/data/products";
 import { ArrowLeft, ArrowRight, Eye, Heart } from "lucide-react";
 import SplitText from "@/components/SplitText";
 import { useStore } from "@/components/store/useStore";
+import { useProducts } from "@/hooks/use-products";
 
 const playfair = Playfair_Display({
   subsets: ["latin"],
@@ -152,9 +152,9 @@ function ProductCard({ product }) {
 function NewArrivals() {
   const [page, setPage] = useState(0);
   const router = useRouter();
+  const { data: products = [], isPending } = useProducts();
 
   const itemsPerPage = 4;
-  const products = staticProducts;
 
   const totalPages = Math.max(1, Math.ceil(products.length / itemsPerPage));
 
@@ -210,9 +210,20 @@ function NewArrivals() {
 
       {/* Grid */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
-        {paginatedProducts.map((product) => (
-          <ProductCard key={product.id} product={product} />
-        ))}
+        {isPending
+          ? Array.from({ length: itemsPerPage }).map((_, i) => (
+              <div key={i} className="flex flex-col gap-3">
+                <div
+                  className="animate-pulse bg-stone-200"
+                  style={{ aspectRatio: "1/1" }}
+                />
+                <div className="h-3.5 w-2/3 animate-pulse bg-stone-200" />
+                <div className="h-3 w-1/3 animate-pulse bg-stone-200" />
+              </div>
+            ))
+          : paginatedProducts.map((product) => (
+              <ProductCard key={product.id} product={product} />
+            ))}
       </div>
 
       {/* Pagination */}

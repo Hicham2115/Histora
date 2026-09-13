@@ -4,8 +4,8 @@ import { Saira_Stencil_One, Noto_Sans } from "next/font/google";
 import Image from "next/image";
 import { ArrowDown, Eye } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { products as staticProducts } from "@/data/products";
 import SplitText from "@/components/SplitText";
+import { useProducts } from "@/hooks/use-products";
 
 const sairaStencil = Saira_Stencil_One({ subsets: ["latin"], weight: "400" });
 const notoSans = Noto_Sans({
@@ -144,10 +144,11 @@ function Collections() {
   const [page, setPage] = useState(0);
   const itemsPerPage = 4;
   const router = useRouter();
+  const { data: shopifyProducts = [], isPending } = useProducts();
 
   const products = useMemo(
     () =>
-      staticProducts.map((item) => {
+      shopifyProducts.map((item) => {
         const swatches = normalizeList(item.color);
         return {
           id: item.id,
@@ -159,7 +160,7 @@ function Collections() {
           image: item.image ?? "",
         };
       }),
-    [],
+    [shopifyProducts],
   );
 
   const totalPages = Math.max(1, Math.ceil(products.length / itemsPerPage));
@@ -231,9 +232,19 @@ function Collections() {
       </div>
       {/* Product grid */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
-        {visibleProducts.map((product, i) => (
-          <ProductCard key={product.id} product={product} index={i} />
-        ))}
+        {isPending
+          ? Array.from({ length: itemsPerPage }).map((_, i) => (
+              <div key={i} className="flex flex-col gap-3">
+                <div
+                  className="animate-pulse bg-stone-200"
+                  style={{ aspectRatio: "4/4" }}
+                />
+                <div className="h-3 w-2/3 animate-pulse bg-stone-200" />
+              </div>
+            ))
+          : visibleProducts.map((product, i) => (
+              <ProductCard key={product.id} product={product} index={i} />
+            ))}
       </div>
       {/* Pagination */}
       <div className="flex justify-center items-center gap-3 mt-12">

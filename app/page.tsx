@@ -6,6 +6,7 @@ import NewArrivals from "@/components/MainSection/NewArrivals";
 import Collections from "@/components/MainSection/Collections";
 import LookbookBanner from "@/components/MainSection/LookbookBanner";
 import OurApproch from "@/components/MainSection/OurApproch";
+import Reviews from "@/components/MainSection/Reviews";
 import FAQ from "@/components/MainSection/FAQ";
 import Contact from "@/components/MainSection/Contact";
 import FinalCTA from "@/components/MainSection/FinalCTA";
@@ -32,6 +33,7 @@ export default function Home() {
       <Collections />
       <LookbookBanner />
       <OurApproch />
+      <Reviews />
       <FAQ />
       <Contact />
       <FinalCTA />
