@@ -62,6 +62,131 @@ function extractNumericId(gid: string) {
   return match ? Number.parseInt(match[1], 10) : 0;
 }
 
+function getShopifyAdminConfig() {
+  const domain = process.env.SHOPIFY_STORE_DOMAIN;
+  const token = process.env.SHOPIFY_ADMIN_ACCESS_TOKEN;
+  if (!domain || !token) {
+    throw new Error(
+      "Missing SHOPIFY_STORE_DOMAIN or SHOPIFY_ADMIN_ACCESS_TOKEN environment variable",
+    );
+  }
+  return { domain, token };
+}
+
+async function shopifyAdminFetch<T>(
+  query: string,
+  variables?: Record<string, unknown>,
+): Promise<T> {
+  const { domain, token } = getShopifyAdminConfig();
+
+  const res = await fetch(`https://${domain}/admin/api/${API_VERSION}/graphql.json`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "X-Shopify-Access-Token": token,
+    },
+    body: JSON.stringify({ query, variables }),
+    cache: "no-store",
+  });
+
+  if (!res.ok) {
+    throw new Error(`Shopify API error: ${res.status} ${res.statusText}`);
+  }
+
+  const json = await res.json();
+  if (json.errors) {
+    throw new Error(
+      Array.isArray(json.errors)
+        ? json.errors.map((e: { message: string }) => e.message).join(", ")
+        : "Unknown Shopify GraphQL error",
+    );
+  }
+
+  return json.data as T;
+}
+
+export type OrderInput = {
+  email?: string;
+  phone?: string;
+  firstName: string;
+  lastName: string;
+  address: string;
+  city: string;
+  postalCode?: string;
+  lineItems: {
+    name: string;
+    price: number;
+    quantity: number;
+    size?: string | null;
+    color?: string | null;
+  }[];
+  currency?: string;
+};
+
+export async function createShopifyOrder(
+  input: OrderInput,
+): Promise<{ id: string; name: string }> {
+  const lineItems = input.lineItems.map((item) => {
+    const variantBits = [item.size, item.color].filter(Boolean).join(" / ");
+    return {
+      title: variantBits ? `${item.name} (${variantBits})` : item.name,
+      quantity: item.quantity,
+      priceSet: {
+        shopMoney: {
+          amount: item.price.toFixed(2),
+          currencyCode: input.currency ?? "MAD",
+        },
+      },
+    };
+  });
+
+  const data = await shopifyAdminFetch<{
+    orderCreate: {
+      order: { id: string; name: string } | null;
+      userErrors: { field: string[]; message: string }[];
+    };
+  }>(
+    `
+      mutation OrderCreate($order: OrderCreateOrderInput!, $options: OrderCreateOptionsInput) {
+        orderCreate(order: $order, options: $options) {
+          order { id name }
+          userErrors { field message }
+        }
+      }
+    `,
+    {
+      order: {
+        email: input.email || undefined,
+        phone: input.phone || undefined,
+        lineItems,
+        shippingAddress: {
+          firstName: input.firstName,
+          lastName: input.lastName,
+          address1: input.address,
+          city: input.city,
+          zip: input.postalCode || undefined,
+          phone: input.phone || undefined,
+          countryCode: "MA",
+        },
+        financialStatus: "PENDING",
+        note: "Placed through histora.com custom checkout (cash on delivery).",
+      },
+      options: {
+        inventoryBehaviour: "BYPASS",
+      },
+    },
+  );
+
+  const { order, userErrors } = data.orderCreate;
+  if (userErrors.length > 0) {
+    throw new Error(userErrors.map((e) => e.message).join(", "));
+  }
+  if (!order) {
+    throw new Error("Shopify did not return an order");
+  }
+  return order;
+}
+
 type ShopifyOption = { name: string; values: string[] };
 type ShopifyProductNode = {
   id: string;

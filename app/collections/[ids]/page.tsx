@@ -322,7 +322,7 @@ export default function ProductPage() {
                 });
                 toast.success("Added to cart");
               }}
-              className="w-full cursor-pointer bg-stone-900 py-4 text-xs font-medium tracking-[0.2em] text-white uppercase transition-colors hover:bg-[#f56464] disabled:cursor-not-allowed disabled:opacity-50"
+              className="w-full cursor-pointer bg-stone-900 py-4 text-xs font-medium tracking-[0.2em] text-white uppercase transition-colors hover:bg-[#f6f1ee] hover:text-stone-900 disabled:cursor-not-allowed disabled:opacity-50"
               disabled={!inStock}
             >
               {inStock ? "Add To Cart" : "Out Of Stock"}

@@ -1,4 +1,14 @@
 import { Resend } from "resend";
+import { createShopifyOrder } from "@/lib/shopify";
+
+type CartItem = {
+  name: string;
+  price: number;
+  quantity: number;
+  image?: string | string[] | null;
+  size?: string | null;
+  color?: string | null;
+};
 
 const normalizeImages = (value: unknown) => {
   if (!value) return [] as string[];
@@ -40,7 +50,7 @@ export async function POST(req: Request) {
         <h3>Items:</h3>
         <ul style="list-style: none; padding: 0;">
           ${data.cart
-            .map((item: any) => {
+            .map((item: CartItem) => {
               const primaryImage = normalizeImages(item.image)[0];
               return `
             <li style="margin-bottom: 15px;">
@@ -59,7 +69,36 @@ export async function POST(req: Request) {
       `,
     });
 
-    return new Response(JSON.stringify({ success: true }), { status: 200 });
+    let shopifyOrderName: string | null = null;
+    let shopifyError: string | null = null;
+    try {
+      const order = await createShopifyOrder({
+        email: data.email,
+        phone: data.phone,
+        firstName: data.firstName,
+        lastName: data.lastName,
+        address: data.address,
+        city: data.city,
+        postalCode: data.postalCode,
+        lineItems: data.cart.map((item: CartItem) => ({
+          name: item.name,
+          price: item.price,
+          quantity: item.quantity,
+          size: item.size,
+          color: item.color,
+        })),
+      });
+      shopifyOrderName = order.name;
+    } catch (shopifyErr) {
+      shopifyError =
+        shopifyErr instanceof Error ? shopifyErr.message : "Unknown error";
+      console.error("Shopify order creation failed:", shopifyError);
+    }
+
+    return new Response(
+      JSON.stringify({ success: true, shopifyOrderName, shopifyError }),
+      { status: 200 },
+    );
   } catch (err) {
     const message = err instanceof Error ? err.message : "Unknown error";
     console.error(message);

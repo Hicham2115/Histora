@@ -12,7 +12,7 @@ const messages = [
   "New Summer 2026 Collection Now Live",
 ];
 
-const REPEAT = 6;
+const REPEAT = 2;
 
 function AnnouncementBar() {
   const content = Array.from({ length: REPEAT })

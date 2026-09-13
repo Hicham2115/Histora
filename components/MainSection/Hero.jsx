@@ -103,7 +103,7 @@ function Hero() {
             onClick={() => router.push("collections")}
             className={`${notoSans.className} group relative mt-2 flex w-fit items-center gap-3 overflow-hidden border border-white/70 px-6 py-3.5 text-xs font-light tracking-[0.25em] text-white uppercase transition-colors duration-300 hover:text-black cursor-pointer`}
           >
-            <span className="absolute inset-0 -translate-x-full bg-white transition-transform duration-300 ease-in-out group-hover:translate-x-0" />
+            <span className="absolute inset-0 -translate-x-full bg-[#f6f1ee] transition-transform duration-300 ease-in-out group-hover:translate-x-0" />
             <span className="relative z-10">Shop Now</span>
             <ArrowRight className="relative z-10 h-3.5 w-3.5" />
           </button>
