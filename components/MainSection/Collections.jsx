@@ -133,7 +133,7 @@ function ProductCard({ product, index }) {
           <span
             className={`${notoSans.className} text-sm font-light text-stone-700 whitespace-nowrap`}
           >
-            $ {product.price}
+            {product.price} DH
           </span>
         </div>
       </div>

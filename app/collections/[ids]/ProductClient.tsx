@@ -349,7 +349,7 @@ export default function ProductPage() {
               {product.name}
             </p>
             <p className="mb-1 text-3xl font-semibold text-[#b8874f]">
-              {product.price} MAD
+              {product.price} DH
             </p>
             <p className="mb-6 text-xs text-stone-400">
               MRP incl. of all taxes
@@ -569,7 +569,7 @@ export default function ProductPage() {
                       )}
                     </div>
                     <p className="mt-3 text-base text-stone-800">{item.name}</p>
-                    <p className="text-sm text-stone-500">{item.price} MAD</p>
+                    <p className="text-sm text-stone-500">{item.price} DH</p>
                   </div>
                 );
               })}

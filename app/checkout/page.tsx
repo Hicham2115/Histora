@@ -463,7 +463,7 @@ export default function CheckoutPage() {
                       </div>
                       <div className="text-right pt-0.5">
                         <p className="text-[13px] font-medium text-stone-900">
-                          {item.price} MAD
+                          {item.price} DH
                         </p>
                         <button
                           type="button"
@@ -482,7 +482,7 @@ export default function CheckoutPage() {
                 <div className="flex justify-between text-sm">
                   <span className="text-stone-500">Subtotal</span>
                   <span className="text-stone-900">
-                    {subtotal.toFixed(2)} MAD
+                    {subtotal.toFixed(2)} DH
                   </span>
                 </div>
                 <div className="flex justify-between text-sm">
@@ -493,7 +493,7 @@ export default function CheckoutPage() {
 
               <div className="flex justify-between text-sm font-medium border-t border-stone-200 mt-4 pt-4">
                 <span>Total</span>
-                <span>{subtotal.toFixed(2)} MAD</span>
+                <span>{subtotal.toFixed(2)} DH</span>
               </div>
             </div>
           </div>

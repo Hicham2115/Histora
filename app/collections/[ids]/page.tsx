@@ -17,7 +17,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const image = product.image.split(",")[0]?.trim();
   const description =
     product.description?.slice(0, 155) ||
-    `Shop ${product.name} at Histora — ${product.price} MAD.`;
+    `Shop ${product.name} at Histora — ${product.price} DH.`;
 
   return {
     title: product.name,

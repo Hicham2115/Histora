@@ -224,7 +224,7 @@ function ProductCard({ product }: { product: Product }) {
           {product.category}
         </span>
         <span className={`${notoSans.className} text-sm text-stone-700`}>
-          {product.price} MAD
+          {product.price} DH
         </span>
       </div>
     </div>

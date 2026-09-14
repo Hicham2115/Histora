@@ -144,7 +144,7 @@ function ProductCard({ product }) {
         <span className="text-xs text-stone-400">
           {swatches[0] || product.category}
         </span>
-        <span className="text-sm text-stone-700">${product.price}</span>
+        <span className="text-sm text-stone-700">{product.price} DH</span>
       </div>
     </div>
   );

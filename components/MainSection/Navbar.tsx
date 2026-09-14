@@ -274,7 +274,7 @@ export default function Component() {
                         <p className="truncate text-sm font-medium text-stone-800">
                           {item.name}
                         </p>
-                        <p className="text-xs text-stone-500">${item.price}</p>
+                        <p className="text-xs text-stone-500">{item.price} DH</p>
                       </div>
                       <button
                         type="button"
@@ -361,12 +361,12 @@ export default function Component() {
                               {item.name}
                             </p>
                             <p className="text-xs text-stone-500">
-                              {item.quantity} × {item.price} MAD
+                              {item.quantity} × {item.price} DH
                             </p>
                           </div>
                           <div className="flex items-center gap-2">
                             <p className="text-xs text-stone-600">
-                              {(item.price * item.quantity).toFixed(2)} MAD
+                              {(item.price * item.quantity).toFixed(2)} DH
                             </p>
                             <button
                               type="button"
@@ -389,7 +389,7 @@ export default function Component() {
                   <div className="mb-2 flex items-center justify-between">
                     <span className="text-xs text-stone-500">Total</span>
                     <span className="text-sm font-medium">
-                      {cartTotal.toFixed(2)} MAD
+                      {cartTotal.toFixed(2)} DH
                     </span>
                   </div>
                   <Link
