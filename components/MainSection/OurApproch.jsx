@@ -27,7 +27,7 @@ const notoSans = Noto_Sans({
 function OurApproch() {
   return (
     <section
-      className={`${notoSans.className} min-h-screen px-8 md:px-24 py-24 `}
+      className={`${notoSans.className} min-h-screen px-5 py-16 sm:px-8 sm:py-20 md:px-24 md:py-24`}
     >
       {/* Eyebrow label */}
       <p
@@ -111,7 +111,7 @@ function OurApproch() {
           <Image
             src={img3}
             alt="Collection 1"
-            className="w-full h-[340px] md:h-[480px] object-cover  hover:grayscale-0 transition-all duration-700 ease-in-out scale-100 group-hover:scale-105"
+            className="w-full h-[190px] sm:h-[280px] md:h-[480px] object-cover  hover:grayscale-0 transition-all duration-700 ease-in-out scale-100 group-hover:scale-105"
           />
           <div className="absolute inset-0 bg-stone-900/10 group-hover:bg-transparent transition-all duration-500" />
         </div>
@@ -120,7 +120,7 @@ function OurApproch() {
           <Image
             src={img4}
             alt="Collection 2"
-            className="w-full h-[340px] md:h-[480px] object-cover  hover:grayscale-0 transition-all duration-700 ease-in-out scale-100 group-hover:scale-105"
+            className="w-full h-[190px] sm:h-[280px] md:h-[480px] object-cover  hover:grayscale-0 transition-all duration-700 ease-in-out scale-100 group-hover:scale-105"
           />
           <div className="absolute inset-0 bg-stone-900/10 group-hover:bg-transparent transition-all duration-500" />
         </div>
@@ -129,7 +129,7 @@ function OurApproch() {
           <Image
             src={img5}
             alt="Collection 3"
-            className="w-full h-[340px] md:h-[480px] object-cover  hover:-0 transition-all duration-700 ease-in-out scale-100 group-hover:scale-105"
+            className="w-full h-[190px] sm:h-[280px] md:h-[480px] object-cover  hover:-0 transition-all duration-700 ease-in-out scale-100 group-hover:scale-105"
           />
           <div className="absolute inset-0 bg-stone-900/10 group-hover:bg-transparent transition-all duration-500" />
         </div>
@@ -138,7 +138,7 @@ function OurApproch() {
           <Image
             src={img6}
             alt="Collection 4"
-            className="w-full h-[340px] md:h-[480px] object-cover  hover:grayscale-0 transition-all duration-700 ease-in-out scale-100 group-hover:scale-105"
+            className="w-full h-[190px] sm:h-[280px] md:h-[480px] object-cover  hover:grayscale-0 transition-all duration-700 ease-in-out scale-100 group-hover:scale-105"
           />
           <div className="absolute inset-0 bg-stone-900/10 group-hover:bg-transparent transition-all duration-500" />
         </div>

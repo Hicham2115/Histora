@@ -84,7 +84,7 @@ function Contact() {
         <div className="relative overflow-hidden rounded-[2rem] border border-stone-200 bg-[#faf9f6] shadow-sm">
           <div className="grid md:grid-cols-2">
             {/* Left — brand & info */}
-            <div className="relative flex flex-col justify-between gap-10 border-b border-dashed border-stone-300 p-8 sm:p-12 md:border-r md:border-b-0">
+            <div className="relative flex flex-col justify-between gap-10 border-b border-dashed border-stone-300 p-6 sm:p-8 md:border-r md:border-b-0 md:p-12">
               <div>
                 <p className="mb-4 text-xs tracking-[0.3em] text-[#b8874f] uppercase">
                   Get In Touch
@@ -140,9 +140,9 @@ function Contact() {
             {/* Right — form */}
             <form
               onSubmit={handleSubmit}
-              className="flex flex-col gap-7 p-8 sm:p-12"
+              className="flex flex-col gap-7 p-6 sm:p-8 md:p-12"
             >
-              <div className="grid grid-cols-2 gap-6">
+              <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
                 <label className="flex flex-col gap-2">
                   <span className="text-xs font-semibold tracking-[0.15em] text-stone-700 uppercase">
                     First Name
