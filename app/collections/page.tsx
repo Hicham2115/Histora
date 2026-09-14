@@ -2,12 +2,14 @@
 
 import React, { useMemo, useState } from "react";
 import Image from "next/image";
+import Link from "next/link";
 import {
   Saira_Stencil_One,
   Cormorant_Garamond,
+  Playfair_Display,
   Noto_Sans,
 } from "next/font/google";
-import { Search, X, Heart, SlidersHorizontal } from "lucide-react";
+import { Search, X, Heart, Eye, SlidersHorizontal } from "lucide-react";
 
 import { useRouter } from "next/navigation";
 import { useProducts } from "@/hooks/use-products";
@@ -20,6 +22,10 @@ const cormorant = Cormorant_Garamond({
   subsets: ["latin"],
   weight: ["300", "400"],
   style: ["italic"],
+});
+const playfair = Playfair_Display({
+  subsets: ["latin"],
+  weight: ["400", "500"],
 });
 const notoSans = Noto_Sans({
   subsets: ["latin"],
@@ -118,6 +124,7 @@ function CheckRow({
 
 function ProductCard({ product }: { product: Product }) {
   const router = useRouter();
+  const [hovered, setHovered] = useState(false);
   const wishlist = useStore((state) => state.wishlist);
   const addToWishlist = useStore((state) => state.addToWishlist);
   const removeFromWishlist = useStore((state) => state.removeFromWishlist);
@@ -146,6 +153,8 @@ function ProductCard({ product }: { product: Product }) {
     <div
       className="group flex cursor-pointer flex-col gap-3"
       onClick={() => router.push(`/collections/${product.handle}`)}
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
     >
       <div
         className="relative overflow-hidden bg-[#eceef2]"
@@ -184,15 +193,23 @@ function ProductCard({ product }: { product: Product }) {
             strokeWidth={1.75}
           />
         </button>
+
+        <span
+          className={`pointer-events-none absolute bottom-4 left-1/2 flex h-10 w-10 -translate-x-1/2 items-center justify-center rounded-full border border-stone-200 bg-white/80 text-stone-700 shadow-md backdrop-blur-md transition-all duration-300 ${
+            hovered ? "translate-y-0 opacity-100" : "translate-y-3 opacity-0"
+          }`}
+        >
+          <Eye className="h-4 w-4 stroke-[1.8]" />
+        </span>
       </div>
 
       <div className="flex flex-col gap-1">
         <div className="flex items-start justify-between gap-2">
-          <span className={`${notoSans.className} text-base text-stone-800`}>
+          <span className={`${playfair.className} text-base text-stone-900`}>
             {product.name}
           </span>
           {swatches.length > 0 && (
-            <div className="flex shrink-0 items-center gap-1 pt-1">
+            <div className="flex shrink-0 items-center gap-1 pt-1.5">
               {swatches.slice(0, 3).map((color: string, i: number) => (
                 <span
                   key={i}
@@ -377,25 +394,33 @@ export default function Collections() {
       className={`${notoSans.className} mx-auto max-w-7xl px-4 pt-28 pb-20 sm:px-6 lg:px-10 lg:pt-36`}
     >
       {/* HEADER */}
-      <div className="mb-10">
-        <p className="text-xs tracking-[0.25em] text-black uppercase">
-          Home / Collections
+      <div className="mb-12 border-b border-stone-200 pb-10">
+        <p className="text-xs tracking-[0.25em] text-stone-400 uppercase">
+          <Link href="/" className="transition-colors hover:text-stone-900">
+            Home
+          </Link>
+          <span className="mx-2 text-stone-300">/</span>
+          <span className="text-stone-600">Collections</span>
         </p>
+
         <h1
-          className={`${sairaStencil.className} mt-3 text-[clamp(2.4rem,6vw,4rem)] leading-none text-stone-900`}
+          className={`${sairaStencil.className} mt-4 text-[clamp(2.4rem,6vw,4rem)] leading-none text-stone-900`}
         >
           The Collection
         </h1>
-        <p className={`${cormorant.className} mt-3 text-lg text-stone-500`}>
-          {isPending
-            ? "Loading pieces..."
-            : `${filteredProducts.length} pieces, curated for now`}
-        </p>
       </div>
 
       <div className="flex flex-col gap-10 lg:flex-row">
         {/* FILTERS — desktop */}
-        <div className="hidden w-60 shrink-0 lg:block">{filterContent}</div>
+        <div className="hidden w-60 shrink-0 lg:block">
+          <div className="mb-6 flex items-center gap-3">
+            <span className="text-xs tracking-[0.3em] text-stone-400 uppercase">
+              Filters
+            </span>
+            <span className="h-px flex-1 bg-stone-200" />
+          </div>
+          {filterContent}
+        </div>
 
         {/* CONTENT */}
         <div className="flex-1">
@@ -407,13 +432,13 @@ export default function Collections() {
                 placeholder="Search products..."
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
-                className="w-full border-b border-stone-300 bg-transparent py-2 pl-6 text-sm text-stone-900 placeholder:text-stone-400 outline-none transition-colors focus:border-stone-900"
+                className="w-full border-b border-stone-300 bg-transparent py-2 pl-6 text-sm text-stone-900 placeholder:text-stone-400 outline-none transition-colors focus:border-[#b8874f]"
               />
             </div>
             <button
               type="button"
               onClick={() => setFiltersOpen(true)}
-              className={`${notoSans.className} flex items-center gap-2 border border-stone-300 px-4 py-2 text-xs tracking-[0.15em] text-stone-700 uppercase lg:hidden`}
+              className={`${notoSans.className} flex items-center gap-2 border border-stone-300 px-4 py-2 text-xs tracking-[0.15em] text-stone-700 uppercase transition-colors hover:border-stone-900 hover:text-stone-900 lg:hidden`}
             >
               <SlidersHorizontal className="h-3.5 w-3.5" />
               Filters
@@ -515,7 +540,7 @@ export default function Collections() {
             <button
               type="button"
               onClick={() => setFiltersOpen(false)}
-              className="mt-8 w-full bg-stone-900 py-3 text-xs tracking-[0.2em] text-white uppercase"
+              className="mt-8 w-full cursor-pointer bg-stone-900 py-3 text-xs tracking-[0.2em] text-white uppercase transition-colors hover:bg-[#b8874f]"
             >
               Show {filteredProducts.length} results
             </button>
