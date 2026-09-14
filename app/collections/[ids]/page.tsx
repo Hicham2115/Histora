@@ -121,7 +121,7 @@ export default function ProductPage() {
         <div className="mx-auto max-w-6xl">
           <Skeleton className="mb-8 h-3 w-56 rounded-none" />
 
-          <div className="grid grid-cols-1 gap-6 lg:grid-cols-[1fr_96px_400px] lg:items-start">
+          <div className="grid grid-cols-1 gap-6 lg:grid-cols-[1fr_96px_460px] lg:items-start">
             <Skeleton className="aspect-4/5 w-full rounded-none" />
 
             <div className="flex flex-row gap-2 overflow-x-auto pb-1 lg:flex-col lg:overflow-visible lg:pb-0">
@@ -283,7 +283,7 @@ export default function ProductPage() {
           <span className="text-stone-600">{product.name}</span>
         </p>
 
-        <div className="grid grid-cols-1 gap-6 lg:grid-cols-[1fr_96px_400px] lg:items-start">
+        <div className="grid grid-cols-1 gap-6 lg:grid-cols-[1fr_96px_460px] lg:items-start">
           {/* Main image */}
           <div className="relative aspect-4/5 w-full overflow-hidden bg-[#eceef2]">
             {thumbnails.length > 0 && (
@@ -468,17 +468,17 @@ export default function ProductPage() {
 
             {/* Quick order — skip checkout */}
             {inStock && (
-              <div className="mt-6 border border-stone-200 p-4">
-                <p className="mb-3 text-xs font-medium tracking-[0.2em] text-stone-500 uppercase">
+              <div className="mt-6 border border-stone-200 p-4 lg:p-6">
+                <p className="mb-3 text-xs font-medium tracking-[0.2em] text-stone-500 uppercase lg:mb-4 lg:text-sm">
                   Or Order Directly — No Checkout Needed
                 </p>
-                <form onSubmit={handleQuickOrder} className="flex flex-col gap-3">
+                <form onSubmit={handleQuickOrder} className="flex flex-col gap-3 lg:gap-4">
                   <div>
                     <input
                       value={quickName}
                       onChange={(e) => setQuickName(e.target.value)}
                       placeholder="Full name"
-                      className="w-full border-b border-stone-300 bg-transparent py-1.5 text-sm text-stone-900 placeholder:text-stone-400 outline-none transition-colors focus:border-stone-900"
+                      className="w-full border-b border-stone-300 bg-transparent py-1.5 text-sm text-stone-900 placeholder:text-stone-400 outline-none transition-colors focus:border-stone-900 lg:py-2.5 lg:text-base"
                     />
                     {quickErrors.name && (
                       <p className="mt-1 text-xs text-red-500">{quickErrors.name}</p>
@@ -490,19 +490,19 @@ export default function ProductPage() {
                       onChange={(e) => setQuickPhone(e.target.value)}
                       type="tel"
                       placeholder="Phone"
-                      className="w-full border-b border-stone-300 bg-transparent py-1.5 text-sm text-stone-900 placeholder:text-stone-400 outline-none transition-colors focus:border-stone-900"
+                      className="w-full border-b border-stone-300 bg-transparent py-1.5 text-sm text-stone-900 placeholder:text-stone-400 outline-none transition-colors focus:border-stone-900 lg:py-2.5 lg:text-base"
                     />
                     {quickErrors.phone && (
                       <p className="mt-1 text-xs text-red-500">{quickErrors.phone}</p>
                     )}
                   </div>
-                  <div className="grid grid-cols-2 gap-3">
+                  <div className="grid grid-cols-2 gap-3 lg:gap-4">
                     <div>
                       <input
                         value={quickAddress}
                         onChange={(e) => setQuickAddress(e.target.value)}
                         placeholder="Address"
-                        className="w-full border-b border-stone-300 bg-transparent py-1.5 text-sm text-stone-900 placeholder:text-stone-400 outline-none transition-colors focus:border-stone-900"
+                        className="w-full border-b border-stone-300 bg-transparent py-1.5 text-sm text-stone-900 placeholder:text-stone-400 outline-none transition-colors focus:border-stone-900 lg:py-2.5 lg:text-base"
                       />
                       {quickErrors.address && (
                         <p className="mt-1 text-xs text-red-500">
@@ -515,7 +515,7 @@ export default function ProductPage() {
                         value={quickCity}
                         onChange={(e) => setQuickCity(e.target.value)}
                         placeholder="City"
-                        className="w-full border-b border-stone-300 bg-transparent py-1.5 text-sm text-stone-900 placeholder:text-stone-400 outline-none transition-colors focus:border-stone-900"
+                        className="w-full border-b border-stone-300 bg-transparent py-1.5 text-sm text-stone-900 placeholder:text-stone-400 outline-none transition-colors focus:border-stone-900 lg:py-2.5 lg:text-base"
                       />
                       {quickErrors.city && (
                         <p className="mt-1 text-xs text-red-500">{quickErrors.city}</p>
@@ -525,7 +525,7 @@ export default function ProductPage() {
                   <button
                     type="submit"
                     disabled={quickSubmitting}
-                    className="mt-1 w-full cursor-pointer border border-stone-900 py-2.5 text-xs font-medium tracking-[0.2em] text-stone-900 uppercase transition-colors hover:bg-stone-900 hover:text-white disabled:cursor-not-allowed disabled:opacity-50"
+                    className="mt-1 w-full cursor-pointer border border-stone-900 py-2.5 text-xs font-medium tracking-[0.2em] text-stone-900 uppercase transition-colors hover:bg-stone-900 hover:text-white disabled:cursor-not-allowed disabled:opacity-50 lg:py-3.5 lg:text-sm"
                   >
                     {quickSubmitting ? "Placing Order..." : "Place Order — Cash On Delivery"}
                   </button>
