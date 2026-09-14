@@ -396,7 +396,7 @@ export default function Collections() {
 
   return (
     <div
-      className={`${notoSans.className} px-3 pt-28 pb-20 sm:px-5 lg:px-8 lg:pt-36`}
+      className={`${notoSans.className} mx-auto max-w-7xl px-3 pt-28 pb-20 sm:px-5 lg:px-8 lg:pt-36`}
     >
       {/* HEADER */}
       <div className="mb-12 border-b border-stone-200 pb-10">

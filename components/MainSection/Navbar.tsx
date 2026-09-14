@@ -221,11 +221,11 @@ export default function Component() {
         <Link href="/" className="flex items-center">
           <Image
             alt="Histora Logo"
-            height={96}
+            height={112}
             src={Logo}
-            width={96}
+            width={272}
             className={cn(
-              "h-20 w-20 cursor-pointer transition-transform duration-300 md:h-24 md:w-24",
+              "h-12 w-auto cursor-pointer transition-transform duration-300 md:h-30",
               !solid && "brightness-0 invert",
             )}
           />
@@ -274,7 +274,9 @@ export default function Component() {
                         <p className="truncate text-sm font-medium text-stone-800">
                           {item.name}
                         </p>
-                        <p className="text-xs text-stone-500">{item.price} DH</p>
+                        <p className="text-xs text-stone-500">
+                          {item.price} DH
+                        </p>
                       </div>
                       <button
                         type="button"
@@ -326,7 +328,10 @@ export default function Component() {
                 )}
               </Button>
             </SheetTrigger>
-            <SheetContent side="right" className="flex w-full flex-col sm:max-w-sm">
+            <SheetContent
+              side="right"
+              className="flex w-full flex-col sm:max-w-sm"
+            >
               <SheetHeader className="border-b border-stone-100 pb-4">
                 <SheetTitle className="text-xs font-medium tracking-[0.2em] text-stone-900 uppercase">
                   Cart

@@ -31,8 +31,11 @@ function SmoothScroll() {
     const handleRefresh = () => lenis.resize();
     ScrollTrigger.addEventListener("refresh", handleRefresh);
 
+    // Observe body, not documentElement: <html> is pinned to viewport
+    // height (h-full in layout.tsx), so its box never resizes as content
+    // grows — only body's does, since it's only min-h-full.
     const resizeObserver = new ResizeObserver(handleRefresh);
-    resizeObserver.observe(document.documentElement);
+    resizeObserver.observe(document.body);
 
     window.addEventListener("load", handleRefresh);
 
