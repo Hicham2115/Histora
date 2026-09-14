@@ -129,7 +129,7 @@ export default function CheckoutPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#f2f1ef] px-6 md:px-16 py-10">
+    <div className="min-h-screen bg-[#f2f1ef] px-6 pt-28 pb-10 md:px-16 lg:pt-36">
       {showSuccessModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 px-4">
           <div className="w-full max-w-md rounded-lg bg-white p-6 shadow-lg">
