@@ -225,7 +225,7 @@ export default function Component() {
             src={Logo}
             width={96}
             className={cn(
-              "h-20 w-20 cursor-pointer transition-transform duration-300  md:h-24 md:w-24",
+              "h-20 w-20 cursor-pointer transition-transform duration-300 md:h-24 md:w-24",
               !solid && "brightness-0 invert",
             )}
           />
