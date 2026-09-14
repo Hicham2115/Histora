@@ -279,7 +279,7 @@ export default function Component() {
                       <button
                         type="button"
                         onClick={() => removeFromWishlist(item.id)}
-                        className="text-stone-400 hover:text-stone-900 transition-colors"
+                        className="text-stone-400 hover:text-stone-900 transition-colors cursor-pointer"
                         aria-label="Remove from wishlist"
                       >
                         <Trash2 size={16} />
@@ -371,7 +371,7 @@ export default function Component() {
                             <button
                               type="button"
                               onClick={() => removeFromCart(item.id)}
-                              className="text-stone-400 transition-colors hover:text-stone-900"
+                              className="text-stone-400 transition-colors hover:text-stone-900 cursor-pointer"
                               aria-label="Remove from cart"
                             >
                               <Trash2 size={16} />

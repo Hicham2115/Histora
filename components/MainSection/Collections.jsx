@@ -227,7 +227,7 @@ function Collections() {
           onClick={() => {
             router.push("/collections");
           }}
-          className={`${notoSans.className} text-sm text-stone-500 hover:text-stone-900 transition-colors duration-200 underline underline-offset-4 decoration-stone-300 hover:decoration-stone-700 mt-2`}
+          className={`${notoSans.className} text-sm text-stone-500 hover:text-stone-900 transition-colors duration-200 underline underline-offset-4 decoration-stone-300 hover:decoration-stone-700 mt-2 cursor-pointer`}
         >
           See All
         </button>
@@ -253,14 +253,14 @@ function Collections() {
         <button
           onClick={() => setPage((p) => Math.max(0, p - 1))}
           disabled={page === 0}
-          className="w-10 h-10 border border-stone-300 bg-white flex items-center justify-center text-stone-600 hover:border-stone-800 hover:bg-stone-800 hover:text-white disabled:opacity-30 disabled:cursor-not-allowed transition-all duration-200"
+          className="w-10 h-10 border border-stone-300 bg-white flex items-center justify-center text-stone-600 hover:border-stone-800 hover:bg-stone-800 hover:text-white disabled:opacity-30 disabled:cursor-not-allowed transition-all duration-200 cursor-pointer"
         >
           ‹
         </button>
         <button
           onClick={() => setPage((p) => Math.min(totalPages - 1, p + 1))}
           disabled={page === totalPages - 1}
-          className="w-10 h-10 border border-stone-300 bg-white flex items-center justify-center text-stone-600 hover:border-stone-800 hover:bg-stone-800 hover:text-white disabled:opacity-30 disabled:cursor-not-allowed transition-all duration-200"
+          className="w-10 h-10 border border-stone-300 bg-white flex items-center justify-center text-stone-600 hover:border-stone-800 hover:bg-stone-800 hover:text-white disabled:opacity-30 disabled:cursor-not-allowed transition-all duration-200 cursor-pointer"
         >
           ›
         </button>

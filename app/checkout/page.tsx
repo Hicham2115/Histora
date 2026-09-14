@@ -145,7 +145,7 @@ export default function CheckoutPage() {
               <button
                 type="button"
                 onClick={() => setShowSuccessModal(false)}
-                className="text-stone-400 hover:text-stone-700"
+                className="text-stone-400 hover:text-stone-700 cursor-pointer"
                 aria-label="Close"
               >
                 ✕
@@ -158,7 +158,7 @@ export default function CheckoutPage() {
               {/* <button
                 type="button"
                 onClick={() => setShowSuccessModal(false)}
-                className="flex-1 rounded border border-stone-200 px-4 py-2 text-xs font-medium uppercase tracking-[0.2em] text-stone-700 hover:border-stone-400"
+                className="flex-1 rounded border border-stone-200 px-4 py-2 text-xs font-medium uppercase tracking-[0.2em] text-stone-700 hover:border-stone-400 cursor-pointer"
               >
                 Continue
               </button> */}
@@ -206,7 +206,7 @@ export default function CheckoutPage() {
                 currentStep === step
                   ? "border-stone-900 text-stone-900"
                   : "border-transparent text-stone-400 hover:text-stone-600"
-              }`}
+              } cursor-pointer`}
             >
               {step}
             </button>

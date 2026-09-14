@@ -330,7 +330,7 @@ export default function Collections() {
                     active
                       ? "border-stone-900 bg-stone-900 text-white"
                       : "border-stone-300 text-stone-600 hover:border-stone-500"
-                  }`}
+                  } cursor-pointer`}
                 >
                   {size}
                 </button>
@@ -438,7 +438,7 @@ export default function Collections() {
             <button
               type="button"
               onClick={() => setFiltersOpen(true)}
-              className={`${notoSans.className} flex items-center gap-2 border border-stone-300 px-4 py-2 text-xs tracking-[0.15em] text-stone-700 uppercase transition-colors hover:border-stone-900 hover:text-stone-900 lg:hidden`}
+              className={`${notoSans.className} flex items-center gap-2 border border-stone-300 px-4 py-2 text-xs tracking-[0.15em] text-stone-700 uppercase transition-colors hover:border-stone-900 hover:text-stone-900 lg:hidden cursor-pointer`}
             >
               <SlidersHorizontal className="h-3.5 w-3.5" />
               Filters
@@ -453,7 +453,7 @@ export default function Collections() {
                   key={`${f.type}-${f.value}`}
                   type="button"
                   onClick={() => clearFilter(f.type, f.value)}
-                  className="flex items-center gap-1.5 border border-stone-300 px-3 py-1 text-xs text-stone-600 transition-colors hover:border-stone-900 hover:text-stone-900"
+                  className="flex items-center gap-1.5 border border-stone-300 px-3 py-1 text-xs text-stone-600 transition-colors hover:border-stone-900 hover:text-stone-900 cursor-pointer"
                 >
                   {f.value}
                   <X className="h-3 w-3" />
@@ -518,7 +518,7 @@ export default function Collections() {
             type="button"
             aria-label="Close filters"
             onClick={() => setFiltersOpen(false)}
-            className="absolute inset-0 bg-black/40"
+            className="absolute inset-0 bg-black/40 cursor-pointer"
           />
           <div className="absolute top-0 right-0 h-full w-[85vw] max-w-sm overflow-y-auto bg-[#f7f5f2] p-6 shadow-xl">
             <div className="mb-6 flex items-center justify-between">
@@ -531,7 +531,7 @@ export default function Collections() {
                 type="button"
                 onClick={() => setFiltersOpen(false)}
                 aria-label="Close"
-                className="text-stone-500 hover:text-stone-900"
+                className="text-stone-500 hover:text-stone-900 cursor-pointer"
               >
                 <X className="h-5 w-5" />
               </button>

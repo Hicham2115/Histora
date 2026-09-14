@@ -246,7 +246,7 @@ export default function ProductPage() {
                     safeActiveImage === i
                       ? "border-stone-900"
                       : "border-transparent hover:border-stone-300"
-                  }`}
+                  } cursor-pointer`}
                 >
                   <Image
                     src={img}
@@ -305,7 +305,7 @@ export default function ProductPage() {
                       key={color}
                       onClick={() => setSelectedColor(color)}
                       title={color}
-                      className="relative h-9 w-9 rounded-full border border-stone-200"
+                      className="relative h-9 w-9 rounded-full border border-stone-200 cursor-pointer"
                       style={{ backgroundColor: COLOR_MAP[color] ?? color }}
                     >
                       {selectedColor === color && (
@@ -336,7 +336,7 @@ export default function ProductPage() {
                             : available
                               ? "border-stone-300 text-stone-900 hover:border-stone-500"
                               : "cursor-not-allowed border-stone-100 text-stone-300 line-through"
-                        }`}
+                        } cursor-pointer`}
                       >
                         {size}
                       </button>
@@ -355,7 +355,7 @@ export default function ProductPage() {
                 <button
                   type="button"
                   onClick={() => setQuantity((q) => Math.max(1, q - 1))}
-                  className="flex h-9 w-9 items-center justify-center text-stone-600 hover:text-stone-900"
+                  className="flex h-9 w-9 items-center justify-center text-stone-600 hover:text-stone-900 cursor-pointer"
                   aria-label="Decrease quantity"
                 >
                   <Minus className="h-3.5 w-3.5" />
@@ -366,7 +366,7 @@ export default function ProductPage() {
                 <button
                   type="button"
                   onClick={() => setQuantity((q) => q + 1)}
-                  className="flex h-9 w-9 items-center justify-center text-stone-600 hover:text-stone-900"
+                  className="flex h-9 w-9 items-center justify-center text-stone-600 hover:text-stone-900 cursor-pointer"
                   aria-label="Increase quantity"
                 >
                   <Plus className="h-3.5 w-3.5" />
@@ -449,7 +449,7 @@ export default function ProductPage() {
           <button
             type="button"
             onClick={() => setIsZoomOpen(false)}
-            className="absolute inset-0 z-0"
+            className="absolute inset-0 z-0 cursor-pointer"
             aria-label="Close zoom view"
           />
           <div
