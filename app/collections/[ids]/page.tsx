@@ -1,12 +1,19 @@
 "use client";
 import { useParams, useRouter } from "next/navigation";
+import Link from "next/link";
 import Image from "next/image";
 import { useEffect, useMemo, useState, type MouseEvent } from "react";
 import { Heart, Minus, Plus, ZoomIn } from "lucide-react";
+import { Noto_Sans } from "next/font/google";
 import { useStore } from "@/components/store/useStore";
 import { useProduct } from "@/hooks/use-product";
 import { useProducts } from "@/hooks/use-products";
 import { toast } from "sonner";
+
+const notoSans = Noto_Sans({
+  subsets: ["latin"],
+  weight: ["300", "400", "500"],
+});
 
 const ALL_SIZES = ["XS", "S", "M", "L", "XL", "2X"];
 
@@ -50,7 +57,7 @@ const isInStockValue = (value: string | null) => {
 export default function ProductPage() {
   const params = useParams();
   const router = useRouter();
-  const rawId = params.ids;
+  const rawHandle = params.ids;
 
   const [activeImage, setActiveImage] = useState(0);
   const [isZoomOpen, setIsZoomOpen] = useState(false);
@@ -64,8 +71,8 @@ export default function ProductPage() {
   const removeFromWishlist = useStore((state) => state.removeFromWishlist);
   const addToCart = useStore((state) => state.addToCart);
 
-  const productId = Array.isArray(rawId) ? rawId[0] : rawId;
-  const { data: product, isPending } = useProduct(productId);
+  const productHandle = Array.isArray(rawHandle) ? rawHandle[0] : rawHandle;
+  const { data: product, isPending } = useProduct(productHandle);
   const { data: allProducts = [] } = useProducts();
 
   useEffect(() => {
@@ -152,8 +159,25 @@ export default function ProductPage() {
         });
 
   return (
-    <div className="min-h-screen px-4 pt-28 pb-20 sm:px-6 md:px-8 lg:pt-36">
+    <div
+      className={`${notoSans.className} min-h-screen px-4 pt-28 pb-24 sm:px-6 md:px-8 lg:pt-36`}
+    >
       <div className="mx-auto max-w-6xl">
+        <p className="mb-8 text-xs tracking-[0.2em] text-stone-400 uppercase">
+          <Link href="/" className="transition-colors hover:text-stone-900">
+            Home
+          </Link>
+          <span className="mx-2 text-stone-300">/</span>
+          <Link
+            href="/collections"
+            className="transition-colors hover:text-stone-900"
+          >
+            Collections
+          </Link>
+          <span className="mx-2 text-stone-300">/</span>
+          <span className="text-stone-600">{product.name}</span>
+        </p>
+
         <div className="grid grid-cols-1 gap-6 lg:grid-cols-[1fr_96px_400px] lg:items-start">
           {/* Main image */}
           <div className="relative aspect-4/5 w-full overflow-hidden bg-[#eceef2]">
@@ -207,25 +231,34 @@ export default function ProductPage() {
           <div className="relative">
             <button
               onClick={toggleWishlist}
-              className="absolute top-0 right-0 text-stone-400 transition-colors hover:text-[#f56464]"
+              className="absolute top-0 right-0 text-stone-400 transition-colors hover:text-stone-900"
               aria-label="Add to wishlist"
             >
               <Heart
-                className={`h-5 w-5 ${isWishlisted ? "fill-[#f56464] text-[#f56464]" : ""}`}
+                className={`h-5 w-5 ${isWishlisted ? "fill-[#b8874f] text-[#b8874f]" : ""}`}
                 strokeWidth={1.5}
               />
             </button>
 
-            <p className="mb-2 pr-8 text-xs font-medium tracking-[0.2em] text-stone-900 uppercase">
+            <p className="mb-3 pr-8 text-sm font-medium tracking-[0.15em] text-stone-900 uppercase">
               {product.name}
             </p>
-            <p className="mb-1 text-2xl font-medium text-stone-900">
+            <p className="mb-1 text-3xl font-semibold text-[#b8874f]">
               {product.price} MAD
             </p>
-            <p className="mb-5 text-xs text-stone-400">MRP incl. of all taxes</p>
-            <p className="mb-6 border-b border-stone-100 pb-5 text-sm leading-relaxed text-stone-600">
-              {product.description}
+            <p className="mb-6 text-xs text-stone-400">
+              MRP incl. of all taxes
             </p>
+            {product.descriptionHtml ? (
+              <div
+                className="mb-6 border-b border-stone-100 pb-6 text-sm leading-relaxed text-stone-600 [&_li]:mb-1.5 [&_ol]:my-2 [&_ol]:list-decimal [&_ol]:pl-5 [&_p]:mb-3 [&_p:last-child]:mb-0 [&_strong]:text-stone-900 [&_ul]:my-2 [&_ul]:list-disc [&_ul]:pl-5"
+                dangerouslySetInnerHTML={{ __html: product.descriptionHtml }}
+              />
+            ) : (
+              <p className="mb-6 border-b border-stone-100 pb-6 text-sm leading-relaxed text-stone-600">
+                {product.description}
+              </p>
+            )}
 
             {productColors.length > 0 && (
               <>
@@ -322,7 +355,7 @@ export default function ProductPage() {
                 });
                 toast.success("Added to cart");
               }}
-              className="w-full cursor-pointer bg-stone-900 py-4 text-xs font-medium tracking-[0.2em] text-white uppercase transition-colors hover:bg-[#f6f1ee] hover:text-stone-900 disabled:cursor-not-allowed disabled:opacity-50"
+              className="w-full cursor-pointer bg-stone-900 py-4 text-xs font-medium tracking-[0.2em] text-white uppercase transition-colors hover:bg-[#b8874f] disabled:cursor-not-allowed disabled:opacity-50"
               disabled={!inStock}
             >
               {inStock ? "Add To Cart" : "Out Of Stock"}
@@ -343,7 +376,7 @@ export default function ProductPage() {
                   <div
                     key={item.id}
                     className="group cursor-pointer"
-                    onClick={() => router.push(`/collections/${item.id}`)}
+                    onClick={() => router.push(`/collections/${item.handle}`)}
                   >
                     <div
                       className="relative overflow-hidden bg-[#eceef2]"
@@ -363,7 +396,7 @@ export default function ProductPage() {
                         </div>
                       )}
                     </div>
-                    <p className="mt-3 text-sm text-stone-800">{item.name}</p>
+                    <p className="mt-3 text-base text-stone-800">{item.name}</p>
                     <p className="text-sm text-stone-500">{item.price} MAD</p>
                   </div>
                 );

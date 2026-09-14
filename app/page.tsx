@@ -10,7 +10,6 @@ import Reviews from "@/components/MainSection/Reviews";
 import FAQ from "@/components/MainSection/FAQ";
 import Contact from "@/components/MainSection/Contact";
 import FinalCTA from "@/components/MainSection/FinalCTA";
-import Footer from "@/components/MainSection/Footer";
 import WhatsAppButton from "@/components/WhatsAppButton";
 
 import { useEffect } from "react";
@@ -30,14 +29,15 @@ export default function Home() {
       <div id="new_arrivals">
         <NewArrivals />
       </div>
-      <Collections />
+      {/* <Collections /> */}
       <LookbookBanner />
-      <OurApproch />
+      <div id="about">
+        <OurApproch />
+      </div>
       <Reviews />
       <FAQ />
       <Contact />
       <FinalCTA />
-      <Footer />
       <WhatsAppButton />
     </>
   );

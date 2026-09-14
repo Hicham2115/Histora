@@ -113,7 +113,7 @@ function FAQ() {
                 </span>
                 <Plus
                   className={`h-4 w-4 shrink-0 text-stone-400 transition-transform duration-300 ${
-                    isOpen ? "rotate-45 text-[#f56464]" : ""
+                    isOpen ? "rotate-45 text-[#b8874f]" : ""
                   }`}
                   strokeWidth={1.5}
                 />

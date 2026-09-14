@@ -6,6 +6,7 @@ import { ArrowDown, Eye } from "lucide-react";
 import { useRouter } from "next/navigation";
 import SplitText from "@/components/SplitText";
 import { useProducts } from "@/hooks/use-products";
+import { Skeleton } from "@/components/ui/skeleton";
 
 const sairaStencil = Saira_Stencil_One({ subsets: ["latin"], weight: "400" });
 const notoSans = Noto_Sans({
@@ -51,7 +52,7 @@ function ProductCard({ product, index }) {
         className="relative bg-[#eceef2] overflow-hidden cursor-pointer"
         style={{ aspectRatio: "4/4" }}
         onClick={() => {
-          router.push(`/collections/${product.id}`);
+          router.push(`/collections/${product.handle}`);
         }}
         onMouseEnter={() => setHovered(true)}
         onMouseLeave={() => setHovered(false)}
@@ -98,7 +99,7 @@ function ProductCard({ product, index }) {
         {/* Category + swatches row */}
         <div className="flex items-center gap-2">
           <span
-            className={`${notoSans.className} text-[11px] text-stone-400 font-light tracking-wide`}
+            className={`${notoSans.className} text-xs text-stone-400 font-light tracking-wide`}
           >
             {product.category}
           </span>
@@ -113,7 +114,7 @@ function ProductCard({ product, index }) {
               ))}
               {product.swatchCount > 2 && (
                 <span
-                  className={`${notoSans.className} text-[10px] text-stone-400`}
+                  className={`${notoSans.className} text-xs text-stone-400`}
                 >
                   +{product.swatchCount - 2}
                 </span>
@@ -125,7 +126,7 @@ function ProductCard({ product, index }) {
         {/* Name + price row */}
         <div className="flex items-start justify-between gap-2">
           <span
-            className={`${notoSans.className} text-sm font-semibold text-stone-800 leading-snug`}
+            className={`${notoSans.className} text-base font-semibold text-stone-800 leading-snug`}
           >
             {product.name}
           </span>
@@ -152,6 +153,7 @@ function Collections() {
         const swatches = normalizeList(item.color);
         return {
           id: item.id,
+          handle: item.handle,
           category: item.category ?? "",
           name: item.name ?? "",
           price: item.price ?? 0,
@@ -194,7 +196,7 @@ function Collections() {
             textAlign="left"
             showCallback
           />
-          <p className={`${notoSans.className} text-sm text-stone-500 mt-2`}>
+          <p className={`${notoSans.className} text-base text-stone-500 mt-2`}>
             Discover our newest arrivals and exclusive collections
           </p>
           {/* <div className="flex gap-4 mt-5">
@@ -235,11 +237,11 @@ function Collections() {
         {isPending
           ? Array.from({ length: itemsPerPage }).map((_, i) => (
               <div key={i} className="flex flex-col gap-3">
-                <div
-                  className="animate-pulse bg-stone-200"
+                <Skeleton
+                  className="rounded-none"
                   style={{ aspectRatio: "4/4" }}
                 />
-                <div className="h-3 w-2/3 animate-pulse bg-stone-200" />
+                <Skeleton className="h-3 w-2/3 rounded-none" />
               </div>
             ))
           : visibleProducts.map((product, i) => (

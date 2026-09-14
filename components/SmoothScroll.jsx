@@ -15,6 +15,7 @@ function SmoothScroll() {
     });
 
     lenis.on("scroll", ScrollTrigger.update);
+    window.lenis = lenis;
 
     const onTick = (time) => {
       lenis.raf(time * 1000);
@@ -25,6 +26,7 @@ function SmoothScroll() {
     return () => {
       gsap.ticker.remove(onTick);
       lenis.destroy();
+      delete window.lenis;
     };
   }, []);
 

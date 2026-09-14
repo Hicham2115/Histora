@@ -2,9 +2,11 @@ import "server-only";
 
 export type Product = {
   id: number;
+  handle: string;
   name: string;
   price: number;
   description: string;
+  descriptionHtml: string;
   image: string;
   color: string;
   size: string;
@@ -190,8 +192,10 @@ export async function createShopifyOrder(
 type ShopifyOption = { name: string; values: string[] };
 type ShopifyProductNode = {
   id: string;
+  handle: string;
   title: string;
   description: string;
+  descriptionHtml: string;
   productType: string;
   availableForSale: boolean;
   images: { edges: { node: { url: string } }[] };
@@ -209,9 +213,11 @@ function findOptionValues(options: ShopifyOption[], name: string) {
 function mapProduct(node: ShopifyProductNode): Product {
   return {
     id: extractNumericId(node.id),
+    handle: node.handle,
     name: node.title,
     price: Number.parseFloat(node.priceRange.minVariantPrice.amount),
     description: node.description,
+    descriptionHtml: node.descriptionHtml,
     image: node.images.edges.map((edge) => edge.node.url).join(","),
     color: findOptionValues(node.options, "color"),
     size: findOptionValues(node.options, "size"),
@@ -224,8 +230,10 @@ function mapProduct(node: ShopifyProductNode): Product {
 
 const PRODUCT_FIELDS = `
   id
+  handle
   title
   description
+  descriptionHtml
   productType
   availableForSale
   images(first: 10) {
@@ -258,22 +266,21 @@ export async function getShopifyProducts(): Promise<Product[]> {
   return data.products.edges.map((edge) => mapProduct(edge.node));
 }
 
-export async function getShopifyProductById(
-  id: number | string,
+export async function getShopifyProductByHandle(
+  handle: string,
 ): Promise<Product | null> {
-  const numericId = typeof id === "string" ? Number.parseInt(id, 10) : id;
-  if (!Number.isFinite(numericId)) return null;
+  if (!handle) return null;
 
-  const data = await shopifyStorefrontFetch<{ product: ShopifyProductNode | null }>(
+  const data = await shopifyStorefrontFetch<{ productByHandle: ShopifyProductNode | null }>(
     `
-      query GetProduct($id: ID!) {
-        product(id: $id) {
+      query GetProduct($handle: String!) {
+        productByHandle(handle: $handle) {
           ${PRODUCT_FIELDS}
         }
       }
     `,
-    { id: `gid://shopify/Product/${numericId}` },
+    { handle },
   );
 
-  return data.product ? mapProduct(data.product) : null;
+  return data.productByHandle ? mapProduct(data.productByHandle) : null;
 }

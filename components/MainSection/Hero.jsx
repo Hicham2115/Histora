@@ -89,7 +89,7 @@ function Hero() {
               "Style isn't just what you put on — it's what you put out into the world. Our collection brings together clothing, vibes, and real stories.",
             ]}
             typingSpeed={35}
-            className={`${notoSans.className} max-w-md text-sm font-light leading-relaxed text-white/75`}
+            className={`${notoSans.className} max-w-md text-base font-light leading-relaxed text-white/75`}
             pauseDuration={1500}
             showCursor
             cursorCharacter="_"
@@ -101,9 +101,9 @@ function Hero() {
           <button
             type="button"
             onClick={() => router.push("collections")}
-            className={`${notoSans.className} group relative mt-2 flex w-fit items-center gap-3 overflow-hidden border border-white/70 px-6 py-3.5 text-xs font-light tracking-[0.25em] text-white uppercase transition-colors duration-300 hover:text-black cursor-pointer`}
+            className={`${notoSans.className} group relative mt-2 flex w-fit items-center gap-3 overflow-hidden border border-white/70 px-6 py-3.5 text-xs font-light tracking-[0.25em] text-white uppercase transition-colors duration-300 hover:border-[#b8874f] cursor-pointer`}
           >
-            <span className="absolute inset-0 -translate-x-full bg-[#f6f1ee] transition-transform duration-300 ease-in-out group-hover:translate-x-0" />
+            <span className="absolute inset-0 -translate-x-full bg-[#b8874f] transition-transform duration-300 ease-in-out group-hover:translate-x-0" />
             <span className="relative z-10">Shop Now</span>
             <ArrowRight className="relative z-10 h-3.5 w-3.5" />
           </button>
@@ -146,7 +146,7 @@ function Hero() {
       {/* Bottom bar */}
       <div className="absolute bottom-8 left-0 right-0 z-10 flex items-center justify-between px-6 sm:px-10 md:px-16">
         <div
-          className={`${notoSans.className} flex items-center gap-3 text-[11px] tracking-[0.2em] text-white/70 uppercase`}
+          className={`${notoSans.className} flex items-center gap-3 text-xs tracking-[0.2em] text-white/70 uppercase`}
         >
           <span className="h-px w-8 bg-white/50" />
           <span>New Arrivals</span>

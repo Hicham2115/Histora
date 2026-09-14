@@ -12,6 +12,7 @@ import { Search, X, Heart, SlidersHorizontal } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useProducts } from "@/hooks/use-products";
 import { useStore } from "@/components/store/useStore";
+import { Skeleton } from "@/components/ui/skeleton";
 import type { Product } from "@/lib/shopify";
 
 const sairaStencil = Saira_Stencil_One({ subsets: ["latin"], weight: "400" });
@@ -64,7 +65,7 @@ function FilterGroup({
   return (
     <div className="border-b border-stone-200 pb-6">
       <p
-        className={`${notoSans.className} mb-4 text-[11px] font-medium tracking-[0.25em] text-stone-500 uppercase`}
+        className={`${notoSans.className} mb-4 text-xs font-medium tracking-[0.25em] text-stone-500 uppercase`}
       >
         {label}
       </p>
@@ -144,7 +145,7 @@ function ProductCard({ product }: { product: Product }) {
   return (
     <div
       className="group flex cursor-pointer flex-col gap-3"
-      onClick={() => router.push(`/collections/${product.id}`)}
+      onClick={() => router.push(`/collections/${product.handle}`)}
     >
       <div
         className="relative overflow-hidden bg-[#eceef2]"
@@ -166,7 +167,7 @@ function ProductCard({ product }: { product: Product }) {
 
         {!inStock && (
           <span
-            className={`${notoSans.className} absolute top-3 left-3 bg-stone-900/85 px-2.5 py-1 text-[10px] tracking-[0.2em] text-white uppercase`}
+            className={`${notoSans.className} absolute top-3 left-3 bg-stone-900/85 px-2.5 py-1 text-xs tracking-[0.2em] text-white uppercase`}
           >
             Sold Out
           </span>
@@ -179,7 +180,7 @@ function ProductCard({ product }: { product: Product }) {
           className="absolute top-3 right-3 flex h-8 w-8 items-center justify-center rounded-full bg-white/85 text-stone-700 shadow-sm backdrop-blur-sm transition-all duration-200 hover:scale-110 hover:bg-white"
         >
           <Heart
-            className={`h-4 w-4 ${isWishlisted ? "fill-[#f56464] text-[#f56464]" : ""}`}
+            className={`h-4 w-4 ${isWishlisted ? "fill-[#b8874f] text-[#b8874f]" : ""}`}
             strokeWidth={1.75}
           />
         </button>
@@ -187,9 +188,7 @@ function ProductCard({ product }: { product: Product }) {
 
       <div className="flex flex-col gap-1">
         <div className="flex items-start justify-between gap-2">
-          <span
-            className={`${notoSans.className} text-sm text-stone-800`}
-          >
+          <span className={`${notoSans.className} text-base text-stone-800`}>
             {product.name}
           </span>
           {swatches.length > 0 && (
@@ -235,8 +234,7 @@ export default function Collections() {
   );
 
   const categoriesList = useMemo(
-    () =>
-      Array.from(new Set(products.map((p) => p.category).filter(Boolean))),
+    () => Array.from(new Set(products.map((p) => p.category).filter(Boolean))),
     [products],
   );
 
@@ -350,7 +348,9 @@ export default function Collections() {
                 key={color}
                 label={color}
                 checked={selectedColors.includes(color)}
-                onToggle={() => toggle(color, selectedColors, setSelectedColors)}
+                onToggle={() =>
+                  toggle(color, selectedColors, setSelectedColors)
+                }
               />
             ))}
           </div>
@@ -359,7 +359,7 @@ export default function Collections() {
 
       <div className="pb-2">
         <p
-          className={`${notoSans.className} mb-4 text-[11px] font-medium tracking-[0.25em] text-stone-500 uppercase`}
+          className={`${notoSans.className} mb-4 text-xs font-medium tracking-[0.25em] text-stone-500 uppercase`}
         >
           Availability
         </p>
@@ -378,7 +378,7 @@ export default function Collections() {
     >
       {/* HEADER */}
       <div className="mb-10">
-        <p className="text-xs tracking-[0.25em] text-stone-400 uppercase">
+        <p className="text-xs tracking-[0.25em] text-black uppercase">
           Home / Collections
         </p>
         <h1
@@ -387,15 +387,15 @@ export default function Collections() {
           The Collection
         </h1>
         <p className={`${cormorant.className} mt-3 text-lg text-stone-500`}>
-          {isPending ? "Loading pieces..." : `${filteredProducts.length} pieces, curated for now`}
+          {isPending
+            ? "Loading pieces..."
+            : `${filteredProducts.length} pieces, curated for now`}
         </p>
       </div>
 
       <div className="flex flex-col gap-10 lg:flex-row">
         {/* FILTERS — desktop */}
-        <div className="hidden w-60 shrink-0 lg:block">
-          {filterContent}
-        </div>
+        <div className="hidden w-60 shrink-0 lg:block">{filterContent}</div>
 
         {/* CONTENT */}
         <div className="flex-1">
@@ -437,7 +437,7 @@ export default function Collections() {
               <button
                 type="button"
                 onClick={clearAll}
-                className="text-xs text-stone-400 underline underline-offset-2 hover:text-[#f56464]"
+                className="text-xs text-stone-400 underline underline-offset-2 hover:text-stone-900"
               >
                 Clear all
               </button>
@@ -449,12 +449,12 @@ export default function Collections() {
             {isPending &&
               Array.from({ length: 6 }).map((_, i) => (
                 <div key={i} className="flex flex-col gap-3">
-                  <div
-                    className="animate-pulse bg-stone-200"
+                  <Skeleton
+                    className="rounded-none"
                     style={{ aspectRatio: "4/5" }}
                   />
-                  <div className="h-3 w-2/3 animate-pulse bg-stone-200" />
-                  <div className="h-3 w-1/3 animate-pulse bg-stone-200" />
+                  <Skeleton className="h-3 w-2/3 rounded-none" />
+                  <Skeleton className="h-3 w-1/3 rounded-none" />
                 </div>
               ))}
 
@@ -471,13 +471,13 @@ export default function Collections() {
               >
                 Nothing here yet.
               </p>
-              <p className="text-sm text-stone-500">
+              <p className="text-base text-stone-500">
                 Try adjusting your filters or search.
               </p>
               <button
                 type="button"
                 onClick={clearAll}
-                className="mt-2 border border-stone-900 px-6 py-2.5 text-xs tracking-[0.2em] text-stone-900 uppercase transition-colors hover:bg-stone-900 hover:text-white"
+                className="mt-2 border border-stone-900 px-6 py-2.5 text-xs tracking-[0.2em] text-stone-900 uppercase transition-colors hover:border-[#b8874f] hover:bg-[#b8874f] hover:text-white"
               >
                 Clear filters
               </button>

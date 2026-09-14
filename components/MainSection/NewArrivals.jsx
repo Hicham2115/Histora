@@ -8,6 +8,7 @@ import { ArrowLeft, ArrowRight, Eye, Heart } from "lucide-react";
 import SplitText from "@/components/SplitText";
 import { useStore } from "@/components/store/useStore";
 import { useProducts } from "@/hooks/use-products";
+import { Skeleton } from "@/components/ui/skeleton";
 
 const playfair = Playfair_Display({
   subsets: ["latin"],
@@ -73,7 +74,7 @@ function ProductCard({ product }) {
         className="relative bg-[#eceef2] overflow-hidden cursor-pointer"
         style={{ aspectRatio: "1/1" }}
         onClick={() => {
-          router.push(`/collections/${product.id}`);
+          router.push(`/collections/${product.handle}`);
         }}
         onMouseEnter={() => setHovered(true)}
         onMouseLeave={() => setHovered(false)}
@@ -99,7 +100,7 @@ function ProductCard({ product }) {
           className="absolute top-3 right-3 flex h-8 w-8 items-center justify-center rounded-full bg-white/85 backdrop-blur-sm text-stone-700 shadow-sm transition-all duration-200 hover:scale-110 hover:bg-white"
         >
           <Heart
-            className={`h-4 w-4 ${isWishlisted ? "fill-[#f56464] text-[#f56464]" : ""}`}
+            className={`h-4 w-4 ${isWishlisted ? "fill-[#b8874f] text-[#b8874f]" : ""}`}
             strokeWidth={1.75}
           />
         </button>
@@ -140,7 +141,7 @@ function ProductCard({ product }) {
             </div>
           )}
         </div>
-        <span className="text-sm text-stone-400">
+        <span className="text-xs text-stone-400">
           {swatches[0] || product.category}
         </span>
         <span className="text-sm text-stone-700">${product.price}</span>
@@ -192,7 +193,7 @@ function NewArrivals() {
             showCallback
           />
 
-          <p className="text-sm text-stone-500 mt-4 max-w-md leading-relaxed">
+          <p className="text-base text-stone-500 mt-4 max-w-md leading-relaxed">
             Fresh drops for the season. Timeless designs, real people,
             everyday stories.
           </p>
@@ -213,12 +214,12 @@ function NewArrivals() {
         {isPending
           ? Array.from({ length: itemsPerPage }).map((_, i) => (
               <div key={i} className="flex flex-col gap-3">
-                <div
-                  className="animate-pulse bg-stone-200"
+                <Skeleton
+                  className="rounded-none"
                   style={{ aspectRatio: "1/1" }}
                 />
-                <div className="h-3.5 w-2/3 animate-pulse bg-stone-200" />
-                <div className="h-3 w-1/3 animate-pulse bg-stone-200" />
+                <Skeleton className="h-3.5 w-2/3 rounded-none" />
+                <Skeleton className="h-3 w-1/3 rounded-none" />
               </div>
             ))
           : paginatedProducts.map((product) => (

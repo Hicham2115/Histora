@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import Navbar from "@/components/MainSection/Navbar";
 import AnnouncementBar from "@/components/AnnouncementBar";
+import Footer from "@/components/MainSection/Footer";
 import Grainient from "@/components/Grainient";
 import SmoothScroll from "@/components/SmoothScroll";
 import QueryProvider from "@/components/QueryProvider";
@@ -106,6 +107,7 @@ export default function RootLayout({
           <AnnouncementBar />
           <Navbar />
           {children}
+          <Footer />
           <Toaster />
         </QueryProvider>
       </body>

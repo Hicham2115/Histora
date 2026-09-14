@@ -26,10 +26,19 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetFooter,
+  SheetTrigger,
+} from "@/components/ui/sheet";
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
+import type { MouseEvent } from "react";
 import { useStore } from "@/components/store/useStore";
 import { cn } from "@/lib/utils";
 
@@ -52,6 +61,9 @@ const navigationLinks = [
   { href: "/", label: "Home" },
   { href: "/collections", label: "Collections" },
   { href: "/#new_arrivals", label: "New Arrivals" },
+  // { href: "/#about", label: "About" },
+  { href: "/#faq", label: "FAQ" },
+  { href: "/#contact", label: "Contact" },
 ];
 
 export default function Component() {
@@ -78,6 +90,26 @@ export default function Component() {
   }, [isHome]);
 
   const solid = !isHome || scrolled;
+
+  const handleNavClick = (e: MouseEvent<HTMLAnchorElement>, href: string) => {
+    const [path, hash] = href.split("#");
+    if (!hash || !isHome || (path && path !== "/")) return;
+
+    e.preventDefault();
+    const target = document.getElementById(hash);
+    if (!target) return;
+
+    const lenis = (
+      window as unknown as {
+        lenis?: { scrollTo: (t: Element, opts?: { offset?: number }) => void };
+      }
+    ).lenis;
+    if (lenis) {
+      lenis.scrollTo(target, { offset: -110 });
+    } else {
+      target.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+  };
 
   return (
     <header
@@ -138,8 +170,9 @@ export default function Component() {
                     return (
                       <NavigationMenuItem className="w-full" key={link.label}>
                         <NavigationMenuLink
-                          className="group flex-row items-center gap-2 border-l-2 border-transparent py-1.5 pl-2 text-xs tracking-[0.15em] text-foreground uppercase transition-all duration-200 hover:border-[#f56464] hover:bg-white hover:pl-3.5 hover:text-[#f56464]"
+                          className="group flex-row items-center gap-2 border-l-2 border-transparent py-1.5 pl-2 text-xs tracking-[0.15em] text-foreground uppercase transition-all duration-200 hover:border-stone-900 hover:bg-white hover:pl-3.5 hover:text-stone-900"
                           href={link.href}
+                          onClick={(e) => handleNavClick(e, link.href)}
                         >
                           <span>{link.label}</span>
                         </NavigationMenuLink>
@@ -155,15 +188,19 @@ export default function Component() {
             <NavigationMenuList className="gap-6">
               {navigationLinks.map((link) => {
                 return (
-                  <NavigationMenuItem key={link.label} className="group/navlink">
+                  <NavigationMenuItem
+                    key={link.label}
+                    className="group/navlink"
+                  >
                     <NavigationMenuLink
                       className={cn(
-                        "relative flex-row items-center py-1.5 text-xs font-light tracking-[0.2em] uppercase transition-all duration-300 group-hover/navlink:tracking-[0.3em] hover:bg-transparent",
+                        "relative flex-row items-center py-1.5 text-xs font-light tracking-[0.2em] whitespace-nowrap uppercase transition-all duration-300 group-hover/navlink:tracking-[0.3em] hover:bg-transparent",
                         solid
                           ? "text-stone-600 group-hover/navlink:text-stone-900"
                           : "text-white/85 group-hover/navlink:text-white",
                       )}
                       href={link.href}
+                      onClick={(e) => handleNavClick(e, link.href)}
                     >
                       <span>{link.label}</span>
                       <span
@@ -188,7 +225,7 @@ export default function Component() {
             src={Logo}
             width={96}
             className={cn(
-              "h-20 w-20 cursor-pointer transition-transform duration-300 hover:scale-105 md:h-24 md:w-24",
+              "h-20 w-20 cursor-pointer transition-transform duration-300  md:h-24 md:w-24",
               !solid && "brightness-0 invert",
             )}
           />
@@ -209,7 +246,7 @@ export default function Component() {
               >
                 <Heart className="size-4" strokeWidth={1.75} />
                 {wishlist.length > 0 && (
-                  <span className="absolute -top-1 -right-1 flex h-4 min-w-4 items-center justify-center rounded-full bg-[#f56464] px-0.5 text-[10px] font-semibold text-white">
+                  <span className="absolute -top-1 -right-1 flex h-4 min-w-4 items-center justify-center rounded-full bg-[#b8874f] px-0.5 text-[10px] font-semibold text-white">
                     {wishlist.length}
                   </span>
                 )}
@@ -242,7 +279,7 @@ export default function Component() {
                       <button
                         type="button"
                         onClick={() => removeFromWishlist(item.id)}
-                        className="text-stone-400 hover:text-[#f56464] transition-colors"
+                        className="text-stone-400 hover:text-stone-900 transition-colors"
                         aria-label="Remove from wishlist"
                       >
                         <Trash2 size={16} />
@@ -258,7 +295,7 @@ export default function Component() {
             className="
     h-auto rounded-full bg-black p-2 text-white
     transition-all duration-300 ease-out
-    hover:bg-[#f56464]
+    hover:bg-[#b8874f]
     hover:scale-110
     hover:-translate-y-1
     hover:rotate-6
@@ -269,9 +306,9 @@ export default function Component() {
           >
             <UserRound />
           </Button> */}
-          {/* Upgrade button */}
-          <Popover>
-            <PopoverTrigger asChild>
+          {/* Cart */}
+          <Sheet>
+            <SheetTrigger asChild>
               <Button
                 aria-label="Cart"
                 className={cn(
@@ -283,80 +320,88 @@ export default function Component() {
               >
                 <ShoppingCart className="size-4" strokeWidth={1.75} />
                 {cartCount > 0 && (
-                  <span className="absolute -top-1 -right-1 flex h-4 min-w-4 items-center justify-center rounded-full bg-[#f56464] px-0.5 text-[10px] font-semibold text-white">
+                  <span className="absolute -top-1 -right-1 flex h-4 min-w-4 items-center justify-center rounded-full bg-[#b8874f] px-0.5 text-[10px] font-semibold text-white">
                     {cartCount}
                   </span>
                 )}
               </Button>
-            </PopoverTrigger>
-            <PopoverContent align="end" className="w-80 p-4">
-              <p className="text-xs tracking-[0.2em] uppercase text-stone-400 mb-3">
-                Cart
-              </p>
-              {cart.length === 0 ? (
-                <p className="text-sm text-stone-500">Your cart is empty.</p>
-              ) : (
-                <div className="space-y-3 max-h-64 overflow-auto pr-1">
-                  {cart.map((item) => {
-                    const primaryImage = normalizeImages(item.image)[0];
-                    return (
-                      <div key={item.id} className="flex items-center gap-3">
-                        <div className="relative h-12 w-12 overflow-hidden rounded bg-stone-100">
-                          {primaryImage ? (
-                            <Image
-                              src={primaryImage}
-                              alt={item.name}
-                              fill
-                              className="object-cover"
-                            />
-                          ) : (
-                            <div className="h-full w-full flex items-center justify-center text-[10px] text-stone-400">
-                              No Image
-                            </div>
-                          )}
+            </SheetTrigger>
+            <SheetContent side="right" className="flex w-full flex-col sm:max-w-sm">
+              <SheetHeader className="border-b border-stone-100 pb-4">
+                <SheetTitle className="text-xs font-medium tracking-[0.2em] text-stone-900 uppercase">
+                  Cart
+                </SheetTitle>
+              </SheetHeader>
+
+              <div className="flex-1 overflow-auto px-4">
+                {cart.length === 0 ? (
+                  <p className="text-sm text-stone-500">Your cart is empty.</p>
+                ) : (
+                  <div className="space-y-4">
+                    {cart.map((item) => {
+                      const primaryImage = normalizeImages(item.image)[0];
+                      return (
+                        <div key={item.id} className="flex items-center gap-3">
+                          <div className="relative h-16 w-16 shrink-0 overflow-hidden rounded bg-stone-100">
+                            {primaryImage ? (
+                              <Image
+                                src={primaryImage}
+                                alt={item.name}
+                                fill
+                                className="object-cover"
+                              />
+                            ) : (
+                              <div className="flex h-full w-full items-center justify-center text-[10px] text-stone-400">
+                                No Image
+                              </div>
+                            )}
+                          </div>
+                          <div className="min-w-0 flex-1">
+                            <p className="truncate text-sm font-medium text-stone-800">
+                              {item.name}
+                            </p>
+                            <p className="text-xs text-stone-500">
+                              {item.quantity} × {item.price} MAD
+                            </p>
+                          </div>
+                          <div className="flex items-center gap-2">
+                            <p className="text-xs text-stone-600">
+                              {(item.price * item.quantity).toFixed(2)} MAD
+                            </p>
+                            <button
+                              type="button"
+                              onClick={() => removeFromCart(item.id)}
+                              className="text-stone-400 transition-colors hover:text-stone-900"
+                              aria-label="Remove from cart"
+                            >
+                              <Trash2 size={16} />
+                            </button>
+                          </div>
                         </div>
-                        <div className="min-w-0 flex-1">
-                          <p className="truncate text-sm font-medium text-stone-800">
-                            {item.name}
-                          </p>
-                          <p className="text-xs text-stone-500">
-                            {item.quantity} × {item.price} MAD
-                          </p>
-                        </div>
-                        <div className="flex items-center gap-2">
-                          <p className="text-xs text-stone-600">
-                            {(item.price * item.quantity).toFixed(2)} MAD
-                          </p>
-                          <button
-                            type="button"
-                            onClick={() => removeFromCart(item.id)}
-                            className="text-stone-400 hover:text-[#f56464] transition-colors"
-                            aria-label="Remove from cart"
-                          >
-                            <Trash2 size={16} />
-                          </button>
-                        </div>
-                      </div>
-                    );
-                  })}
-                </div>
-              )}
+                      );
+                    })}
+                  </div>
+                )}
+              </div>
+
               {cart.length > 0 && (
-                <div className="mt-4 flex items-center justify-between">
-                  <span className="text-xs text-stone-500">Total</span>
-                  <span className="text-sm font-medium">
-                    {cartTotal.toFixed(2)} MAD
-                  </span>
-                </div>
+                <SheetFooter className="border-t border-stone-100 pt-4">
+                  <div className="mb-2 flex items-center justify-between">
+                    <span className="text-xs text-stone-500">Total</span>
+                    <span className="text-sm font-medium">
+                      {cartTotal.toFixed(2)} MAD
+                    </span>
+                  </div>
+                  <Link
+                    href="/checkout"
+                    className="block w-full rounded border border-black bg-black px-4 py-3 text-center text-xs font-medium tracking-widest text-white uppercase transition-colors hover:border-[#b8874f] hover:bg-[#b8874f]"
+                  >
+                    Checkout
+                  </Link>
+                </SheetFooter>
               )}
-              <Link
-                href="/checkout"
-                className="mt-4 block w-full rounded bg-black px-4 py-2 text-center text-xs font-medium tracking-widest uppercase text-white hover:bg-[#f56464] transition-colors"
-              >
-                Checkout
-              </Link>
-            </PopoverContent>
-          </Popover>
+            </SheetContent>
+          </Sheet>
         </div>
       </div>
     </header>
