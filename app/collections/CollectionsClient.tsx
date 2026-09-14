@@ -9,12 +9,11 @@ import {
   Playfair_Display,
   Noto_Sans,
 } from "next/font/google";
-import { Search, X, Heart, Eye, SlidersHorizontal } from "lucide-react";
+import { Search, X, Heart, Eye, SlidersHorizontal, Loader2 } from "lucide-react";
 
 import { useRouter } from "next/navigation";
 import { useProducts } from "@/hooks/use-products";
 import { useStore } from "@/components/store/useStore";
-import { Skeleton } from "@/components/ui/skeleton";
 import type { Product } from "@/lib/shopify";
 
 const sairaStencil = Saira_Stencil_One({ subsets: ["latin"], weight: "400" });
@@ -232,7 +231,13 @@ function ProductCard({ product }: { product: Product }) {
 }
 
 export default function Collections() {
-  const { data: products = [], isPending } = useProducts();
+  const {
+    data: products = [],
+    isPending,
+    isError,
+    error,
+    refetch,
+  } = useProducts();
   const [search, setSearch] = useState("");
   const [selectedSizes, setSelectedSizes] = useState<string[]>([]);
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
@@ -391,7 +396,7 @@ export default function Collections() {
 
   return (
     <div
-      className={`${notoSans.className} mx-auto max-w-7xl px-4 pt-28 pb-20 sm:px-6 lg:px-10 lg:pt-36`}
+      className={`${notoSans.className} px-3 pt-28 pb-20 sm:px-5 lg:px-8 lg:pt-36`}
     >
       {/* HEADER */}
       <div className="mb-12 border-b border-stone-200 pb-10">
@@ -470,30 +475,40 @@ export default function Collections() {
           )}
 
           {/* GRID */}
-          <div className="grid grid-cols-2 gap-x-4 gap-y-10 sm:grid-cols-3">
-            {isPending &&
-              Array.from({ length: 6 }).map((_, i) => (
-                <div key={i} className="flex flex-col gap-3">
-                  <Skeleton
-                    className="rounded-none"
-                    style={{ aspectRatio: "4/5" }}
-                  />
-                  <Skeleton className="h-3 w-2/3 rounded-none" />
-                  <Skeleton className="h-3 w-1/3 rounded-none" />
-                </div>
-              ))}
-
-            {!isPending &&
-              filteredProducts.map((product) => (
+          {isPending ? (
+            <div className="flex flex-col items-center justify-center gap-4 py-32">
+              <Loader2 className="h-6 w-6 animate-spin text-stone-400" strokeWidth={1.5} />
+              <p className="text-xs tracking-[0.25em] text-stone-400 uppercase">
+                Loading products...
+              </p>
+            </div>
+          ) : isError ? (
+            <div className="flex flex-col items-start gap-3 py-12">
+              <p className={`${sairaStencil.className} text-2xl text-stone-800`}>
+                Couldn&apos;t load products.
+              </p>
+              <p className="text-base text-stone-500">
+                {error instanceof Error ? error.message : "Something went wrong."}
+              </p>
+              <button
+                type="button"
+                onClick={() => refetch()}
+                className="mt-2 border border-stone-900 px-6 py-2.5 text-xs tracking-[0.2em] text-stone-900 uppercase transition-colors hover:border-[#b8874f] hover:bg-[#b8874f] hover:text-white cursor-pointer"
+              >
+                Try again
+              </button>
+            </div>
+          ) : (
+            <div className="grid grid-cols-2 gap-x-3 gap-y-10 sm:gap-x-4 sm:grid-cols-3">
+              {filteredProducts.map((product) => (
                 <ProductCard key={product.id} product={product} />
               ))}
-          </div>
+            </div>
+          )}
 
-          {!isPending && filteredProducts.length === 0 && (
-            <div className="flex flex-col items-center gap-4 py-24 text-center">
-              <p
-                className={`${sairaStencil.className} text-2xl text-stone-800`}
-              >
+          {!isPending && !isError && filteredProducts.length === 0 && (
+            <div className="flex flex-col items-start gap-3 py-12">
+              <p className={`${sairaStencil.className} text-2xl text-stone-800`}>
                 Nothing here yet.
               </p>
               <p className="text-base text-stone-500">

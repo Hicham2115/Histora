@@ -5,11 +5,12 @@ import Image from "next/image";
 import {
   useEffect,
   useMemo,
+  useRef,
   useState,
   type FormEvent,
   type MouseEvent,
 } from "react";
-import { Heart, Minus, Plus, ZoomIn } from "lucide-react";
+import { Heart, Minus, Plus, ShoppingBag, ZoomIn } from "lucide-react";
 import { Noto_Sans } from "next/font/google";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useStore } from "@/components/store/useStore";
@@ -79,6 +80,9 @@ export default function ProductPage() {
   const [quickCity, setQuickCity] = useState("");
   const [quickErrors, setQuickErrors] = useState<Record<string, string>>({});
   const [quickSubmitting, setQuickSubmitting] = useState(false);
+  const [showStickyBar, setShowStickyBar] = useState(false);
+  const addToCartSectionRef = useRef<HTMLDivElement>(null);
+  const quickOrderSectionRef = useRef<HTMLDivElement>(null);
   const wishlist = useStore((state) => state.wishlist);
   const addToWishlist = useStore((state) => state.addToWishlist);
   const removeFromWishlist = useStore((state) => state.removeFromWishlist);
@@ -94,6 +98,17 @@ export default function ProductPage() {
     const colors = normalizeList(product.color);
     setSelectedSize((prev) => prev ?? sizes[0] ?? null);
     setSelectedColor((prev) => prev ?? colors[0] ?? null);
+  }, [product]);
+
+  useEffect(() => {
+    const target = addToCartSectionRef.current;
+    if (!target) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => setShowStickyBar(!entry.isIntersecting),
+      { threshold: 0 },
+    );
+    observer.observe(target);
+    return () => observer.disconnect();
   }, [product]);
 
   const productSizes = useMemo(
@@ -309,7 +324,7 @@ export default function ProductPage() {
           {/* Thumbnail strip */}
           {thumbnails.length > 0 && (
             <div className="flex flex-row gap-2 overflow-x-auto pb-1 lg:flex-col lg:overflow-visible lg:pb-0">
-              {thumbnails.slice(0, 5).map((img, i) => (
+              {thumbnails.map((img, i) => (
                 <button
                   key={i}
                   onClick={() => setActiveImage(i)}
@@ -418,7 +433,7 @@ export default function ProductPage() {
             )}
 
             {/* Quantity */}
-            <div className="mb-6 flex items-center justify-between">
+            <div ref={addToCartSectionRef} className="mb-6 flex items-center justify-between">
               <p className="text-xs font-medium tracking-[0.2em] text-stone-500 uppercase">
                 Quantity
               </p>
@@ -468,7 +483,7 @@ export default function ProductPage() {
 
             {/* Quick order — skip checkout */}
             {inStock && (
-              <div className="mt-6 border border-stone-200 p-4 lg:p-6">
+              <div ref={quickOrderSectionRef} className="mt-6 border border-stone-200 p-4 lg:p-6">
                 <p className="mb-3 text-xs font-medium tracking-[0.2em] text-stone-500 uppercase lg:mb-4 lg:text-sm">
                   Or Order Directly — No Checkout Needed
                 </p>
@@ -577,6 +592,74 @@ export default function ProductPage() {
           </div>
         )}
       </div>
+
+      {inStock && (
+        <div
+          className={`fixed inset-x-0 bottom-0 z-40 border-t border-stone-200 bg-white/95 px-4 py-3 backdrop-blur-sm transition-all duration-300 ease-out sm:hidden ${
+            showStickyBar
+              ? "translate-y-0 opacity-100"
+              : "pointer-events-none translate-y-full opacity-0"
+          }`}
+        >
+          <div className="mx-auto flex max-w-xl flex-col gap-2">
+            <button
+              type="button"
+              onClick={() =>
+                quickOrderSectionRef.current?.scrollIntoView({
+                  behavior: "smooth",
+                  block: "center",
+                })
+              }
+              className="w-full cursor-pointer rounded-full bg-stone-900 py-3.5 text-sm font-semibold text-white transition-colors hover:bg-[#b8874f]"
+            >
+              Achat rapide <span className="mx-1.5 text-stone-400">·</span>{" "}
+              {product.price} DH
+            </button>
+            <div className="flex items-center gap-2">
+              <div className="flex items-center rounded-full border border-stone-200">
+                <button
+                  type="button"
+                  onClick={() => setQuantity((q) => Math.max(1, q - 1))}
+                  className="flex h-11 w-11 items-center justify-center text-stone-600 hover:text-stone-900 cursor-pointer"
+                  aria-label="Decrease quantity"
+                >
+                  <Minus className="h-3.5 w-3.5" />
+                </button>
+                <span className="w-8 text-center text-sm font-medium">
+                  {quantity}
+                </span>
+                <button
+                  type="button"
+                  onClick={() => setQuantity((q) => q + 1)}
+                  className="flex h-11 w-11 items-center justify-center text-stone-600 hover:text-stone-900 cursor-pointer"
+                  aria-label="Increase quantity"
+                >
+                  <Plus className="h-3.5 w-3.5" />
+                </button>
+              </div>
+              <button
+                type="button"
+                onClick={() => {
+                  addToCart({
+                    id: product.id,
+                    name: product.name || "",
+                    price: product.price || 0,
+                    image: thumbnails[0] || "",
+                    quantity,
+                    size: selectedSize ?? null,
+                    color: selectedColor ?? null,
+                  });
+                  toast.success("Added to cart");
+                }}
+                className="flex flex-1 cursor-pointer items-center justify-center gap-2 rounded-full border border-stone-900 py-3 text-sm font-medium text-stone-900 transition-colors hover:bg-stone-900 hover:text-white"
+              >
+                <ShoppingBag className="h-4 w-4" strokeWidth={1.75} />
+                Ajouter au panier
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {isZoomOpen && canZoom && (
         <div

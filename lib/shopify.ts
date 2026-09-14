@@ -236,7 +236,7 @@ const PRODUCT_FIELDS = `
   descriptionHtml
   productType
   availableForSale
-  images(first: 10) {
+  images(first: 20) {
     edges { node { url } }
   }
   options {
