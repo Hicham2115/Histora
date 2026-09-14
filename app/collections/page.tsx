@@ -93,7 +93,7 @@ function CheckRow({
     <button
       type="button"
       onClick={onToggle}
-      className={`${notoSans.className} group flex w-full items-center gap-2.5 py-1 text-left text-sm text-stone-600 transition-colors hover:text-stone-900`}
+      className={`${notoSans.className} group flex w-full items-center gap-2.5 py-1 text-left text-sm text-stone-600 transition-colors hover:text-stone-900 cursor-pointer`}
     >
       <span
         className={`flex h-4 w-4 shrink-0 items-center justify-center border transition-colors ${
@@ -186,7 +186,7 @@ function ProductCard({ product }: { product: Product }) {
           type="button"
           onClick={toggleWishlist}
           aria-label={isWishlisted ? "Remove from wishlist" : "Add to wishlist"}
-          className="absolute top-3 right-3 flex h-8 w-8 items-center justify-center rounded-full bg-white/85 text-stone-700 shadow-sm backdrop-blur-sm transition-all duration-200 hover:scale-110 hover:bg-white"
+          className="absolute top-3 right-3 flex h-8 w-8 items-center justify-center rounded-full bg-white/85 text-stone-700 shadow-sm backdrop-blur-sm transition-all duration-200 hover:scale-110 hover:bg-white cursor-pointer"
         >
           <Heart
             className={`h-4 w-4 ${isWishlisted ? "fill-[#b8874f] text-[#b8874f]" : ""}`}
@@ -462,7 +462,7 @@ export default function Collections() {
               <button
                 type="button"
                 onClick={clearAll}
-                className="text-xs text-stone-400 underline underline-offset-2 hover:text-stone-900"
+                className="text-xs text-stone-400 underline underline-offset-2 hover:text-stone-900 cursor-pointer"
               >
                 Clear all
               </button>
@@ -502,7 +502,7 @@ export default function Collections() {
               <button
                 type="button"
                 onClick={clearAll}
-                className="mt-2 border border-stone-900 px-6 py-2.5 text-xs tracking-[0.2em] text-stone-900 uppercase transition-colors hover:border-[#b8874f] hover:bg-[#b8874f] hover:text-white"
+                className="mt-2 border border-stone-900 px-6 py-2.5 text-xs tracking-[0.2em] text-stone-900 uppercase transition-colors hover:border-[#b8874f] hover:bg-[#b8874f] hover:text-white cursor-pointer"
               >
                 Clear filters
               </button>

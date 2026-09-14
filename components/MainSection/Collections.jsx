@@ -88,7 +88,7 @@ function ProductCard({ product, index }) {
     hover:bg-black hover:text-white hover:scale-110
     active:scale-95
     ${hovered ? "opacity-100 translate-y-0" : "opacity-0 translate-y-3"}
-  `}
+   cursor-pointer`}
         >
           <Eye className="w-5 h-5 stroke-[1.8]" />
         </button>

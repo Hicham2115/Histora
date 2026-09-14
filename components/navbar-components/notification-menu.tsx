@@ -123,7 +123,7 @@ export default function NotificationMenu() {
           <div className="font-semibold text-sm">Notifications</div>
           {unreadCount > 0 && (
             <button
-              className="font-medium text-xs hover:underline"
+              className="font-medium text-xs hover:underline cursor-pointer"
               onClick={handleMarkAllAsRead}
               type="button"
             >
@@ -145,7 +145,7 @@ export default function NotificationMenu() {
             <div className="relative flex items-start pe-3">
               <div className="flex-1 space-y-1">
                 <button
-                  className="text-left text-foreground/80 after:absolute after:inset-0"
+                  className="text-left text-foreground/80 after:absolute after:inset-0 cursor-pointer"
                   onClick={() => handleNotificationClick(notification.id)}
                   type="button"
                 >

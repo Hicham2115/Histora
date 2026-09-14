@@ -97,7 +97,7 @@ function ProductCard({ product }) {
           type="button"
           onClick={toggleWishlist}
           aria-label={isWishlisted ? "Remove from wishlist" : "Add to wishlist"}
-          className="absolute top-3 right-3 flex h-8 w-8 items-center justify-center rounded-full bg-white/85 backdrop-blur-sm text-stone-700 shadow-sm transition-all duration-200 hover:scale-110 hover:bg-white"
+          className="absolute top-3 right-3 flex h-8 w-8 items-center justify-center rounded-full bg-white/85 backdrop-blur-sm text-stone-700 shadow-sm transition-all duration-200 hover:scale-110 hover:bg-white cursor-pointer"
         >
           <Heart
             className={`h-4 w-4 ${isWishlisted ? "fill-[#b8874f] text-[#b8874f]" : ""}`}
@@ -118,7 +118,7 @@ function ProductCard({ product }) {
     hover:bg-black hover:text-white hover:scale-110
     active:scale-95
     ${hovered ? "opacity-100 translate-y-0" : "opacity-0 translate-y-3"}
-  `}
+   cursor-pointer`}
         >
           <Eye className="w-5 h-5 stroke-[1.8]" />
         </button>

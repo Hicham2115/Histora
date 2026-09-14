@@ -302,7 +302,7 @@ export default function CheckoutPage() {
                     <PopoverTrigger asChild>
                       <button
                         type="button"
-                        className="w-full h-11 px-3.5 flex items-center justify-between bg-white border border-stone-200 rounded text-sm text-stone-900"
+                        className="w-full h-11 px-3.5 flex items-center justify-between bg-white border border-stone-200 rounded text-sm text-stone-900 cursor-pointer"
                       >
                         {city
                           ? city.charAt(0).toUpperCase() + city.slice(1)
@@ -407,7 +407,7 @@ export default function CheckoutPage() {
                 type="button"
                 onClick={handleNext}
                 disabled={isSubmitting}
-                className="w-full flex items-center justify-between px-5 py-4 bg-stone-200 hover:bg-[#b8874f] hover:text-white text-stone-900 rounded text-[11px] font-medium tracking-[0.12em] uppercase transition-colors group disabled:cursor-not-allowed disabled:opacity-60 disabled:hover:bg-stone-200 disabled:hover:text-stone-900"
+                className="w-full flex items-center justify-between px-5 py-4 bg-stone-200 hover:bg-[#b8874f] hover:text-white text-stone-900 rounded text-[11px] font-medium tracking-[0.12em] uppercase transition-colors group disabled:cursor-not-allowed disabled:opacity-60 disabled:hover:bg-stone-200 disabled:hover:text-stone-900 cursor-pointer"
               >
                 <span>{isSubmitting ? "Submitting..." : "Confirm Order"}</span>
                 <svg

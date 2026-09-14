@@ -223,7 +223,7 @@ function Contact() {
                 <button
                   type="submit"
                   disabled={isSubmitting}
-                  className={`${notoSans.className} group relative flex w-fit shrink-0 items-center gap-3 overflow-hidden border border-stone-900 bg-stone-900 px-6 py-3.5 text-xs font-light tracking-[0.25em] text-white uppercase transition-colors duration-300 hover:border-[#b8874f] disabled:cursor-not-allowed disabled:opacity-50`}
+                  className={`${notoSans.className} group relative flex w-fit shrink-0 items-center gap-3 overflow-hidden border border-stone-900 bg-stone-900 px-6 py-3.5 text-xs font-light tracking-[0.25em] text-white uppercase transition-colors duration-300 hover:border-[#b8874f] disabled:cursor-not-allowed disabled:opacity-50 cursor-pointer`}
                 >
                   <span className="absolute inset-0 -translate-x-full bg-[#b8874f] transition-transform duration-300 ease-in-out group-hover:translate-x-0" />
                   <span className="relative z-10">

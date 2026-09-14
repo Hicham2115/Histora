@@ -227,7 +227,7 @@ export default function ProductPage() {
             <button
               type="button"
               onClick={handleOpenZoom}
-              className="absolute right-3 bottom-3 flex h-9 w-9 items-center justify-center rounded-full bg-white/90 text-stone-900 shadow transition-colors hover:bg-white"
+              className="absolute right-3 bottom-3 flex h-9 w-9 items-center justify-center rounded-full bg-white/90 text-stone-900 shadow transition-colors hover:bg-white cursor-pointer"
               aria-label="Open zoom view"
               disabled={!canZoom}
             >
@@ -265,7 +265,7 @@ export default function ProductPage() {
           <div className="relative">
             <button
               onClick={toggleWishlist}
-              className="absolute top-0 right-0 text-stone-400 transition-colors hover:text-stone-900"
+              className="absolute top-0 right-0 text-stone-400 transition-colors hover:text-stone-900 cursor-pointer"
               aria-label="Add to wishlist"
             >
               <Heart
