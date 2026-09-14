@@ -5,6 +5,7 @@ import { useState } from "react";
 import { ChevronUp, ChevronDown, ArrowRight, Play } from "lucide-react";
 
 import bgHero from "@/app/assets/bg hero.png";
+import bgHeroMobile from "@/app/assets/bg mobile.png";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import TextType from "@/components/TextType";
@@ -33,11 +34,18 @@ function Hero() {
     <div className="relative h-screen min-h-175 w-full overflow-hidden bg-black">
       {/* Background image */}
       <Image
+        src={bgHeroMobile}
+        alt="Histora Summer 2026"
+        fill
+        priority
+        className="object-cover md:hidden"
+      />
+      <Image
         src={bgHero}
         alt="Histora Summer 2026"
         fill
         priority
-        className="object-cover"
+        className="hidden object-cover md:block"
       />
       {/* Darkening overlay for text legibility */}
       {/* <div className="absolute inset-0 bg-linear-to-r from-black/40 via-black/25 to-black/10" /> */}

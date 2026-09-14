@@ -6,6 +6,7 @@ import { ArrowRight } from "lucide-react";
 import { useRouter } from "next/navigation";
 
 import lookbookImage from "@/app/assets/banner.png";
+import lookbookImageMobile from "@/app/assets/banner mobile.png";
 
 const playfair = Playfair_Display({
   subsets: ["latin"],
@@ -24,10 +25,16 @@ function LookbookBanner() {
   return (
     <section className="relative flex h-[85vh] min-h-[560px] w-full items-center justify-center overflow-hidden bg-black">
       <Image
+        src={lookbookImageMobile}
+        alt="Histora lookbook"
+        fill
+        className="object-cover object-top opacity-90 md:hidden"
+      />
+      <Image
         src={lookbookImage}
         alt="Histora lookbook"
         fill
-        className="object-cover object-top opacity-90"
+        className="hidden object-cover object-top opacity-90 md:block"
       />
       {/* <div className="absolute inset-0 bg-black/50" /> */}
       {/* <div className="absolute inset-0 bg-linear-to-t from-black/70 via-transparent to-black/40" /> */}

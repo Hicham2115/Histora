@@ -2,7 +2,13 @@
 import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
-import { useEffect, useMemo, useState, type MouseEvent } from "react";
+import {
+  useEffect,
+  useMemo,
+  useState,
+  type FormEvent,
+  type MouseEvent,
+} from "react";
 import { Heart, Minus, Plus, ZoomIn } from "lucide-react";
 import { Noto_Sans } from "next/font/google";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -67,6 +73,12 @@ export default function ProductPage() {
   const [selectedSize, setSelectedSize] = useState<string | null>(null);
   const [selectedColor, setSelectedColor] = useState<string | null>(null);
   const [quantity, setQuantity] = useState(1);
+  const [quickName, setQuickName] = useState("");
+  const [quickPhone, setQuickPhone] = useState("");
+  const [quickAddress, setQuickAddress] = useState("");
+  const [quickCity, setQuickCity] = useState("");
+  const [quickErrors, setQuickErrors] = useState<Record<string, string>>({});
+  const [quickSubmitting, setQuickSubmitting] = useState(false);
   const wishlist = useStore((state) => state.wishlist);
   const addToWishlist = useStore((state) => state.addToWishlist);
   const removeFromWishlist = useStore((state) => state.removeFromWishlist);
@@ -179,6 +191,65 @@ export default function ProductPage() {
     const x = ((event.clientX - rect.left) / rect.width) * 100;
     const y = ((event.clientY - rect.top) / rect.height) * 100;
     setZoomOrigin(`${x}% ${y}%`);
+  };
+
+  const handleQuickOrder = async (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    const errors: Record<string, string> = {};
+    if (!quickName.trim()) errors.name = "Name is required";
+    if (quickPhone.trim().length < 7) errors.phone = "Enter a valid phone number";
+    if (!quickAddress.trim()) errors.address = "Address is required";
+    if (!quickCity.trim()) errors.city = "City is required";
+    setQuickErrors(errors);
+    if (Object.keys(errors).length > 0) return;
+
+    const [firstName, ...rest] = quickName.trim().split(/\s+/);
+    const lastName = rest.join(" ") || firstName;
+
+    const cartItem = {
+      id: product.id,
+      name: product.name || "",
+      price: product.price || 0,
+      image: thumbnails[0] || "",
+      quantity,
+      size: selectedSize ?? null,
+      color: selectedColor ?? null,
+    };
+
+    try {
+      setQuickSubmitting(true);
+      const response = await fetch("/api/sendOrder", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          email: "",
+          phone: quickPhone,
+          firstName,
+          lastName,
+          address: quickAddress,
+          city: quickCity,
+          postalCode: "",
+          cart: [cartItem],
+          subtotal: (cartItem.price * cartItem.quantity).toFixed(2),
+        }),
+      });
+      const result = await response.json();
+      if (result.success) {
+        toast.success("Order placed — we'll call you to confirm.");
+        setQuickName("");
+        setQuickPhone("");
+        setQuickAddress("");
+        setQuickCity("");
+      } else {
+        toast.error("Couldn't place the order. Please try again.");
+      }
+    } catch (err) {
+      console.error(err);
+      toast.error("Something went wrong. Please try again.");
+    } finally {
+      setQuickSubmitting(false);
+    }
   };
 
   const toggleWishlist = () =>
@@ -394,6 +465,73 @@ export default function ProductPage() {
             >
               {inStock ? "Add To Cart" : "Out Of Stock"}
             </button>
+
+            {/* Quick order — skip checkout */}
+            {inStock && (
+              <div className="mt-6 border border-stone-200 p-4">
+                <p className="mb-3 text-xs font-medium tracking-[0.2em] text-stone-500 uppercase">
+                  Or Order Directly — No Checkout Needed
+                </p>
+                <form onSubmit={handleQuickOrder} className="flex flex-col gap-3">
+                  <div>
+                    <input
+                      value={quickName}
+                      onChange={(e) => setQuickName(e.target.value)}
+                      placeholder="Full name"
+                      className="w-full border-b border-stone-300 bg-transparent py-1.5 text-sm text-stone-900 placeholder:text-stone-400 outline-none transition-colors focus:border-stone-900"
+                    />
+                    {quickErrors.name && (
+                      <p className="mt-1 text-xs text-red-500">{quickErrors.name}</p>
+                    )}
+                  </div>
+                  <div>
+                    <input
+                      value={quickPhone}
+                      onChange={(e) => setQuickPhone(e.target.value)}
+                      type="tel"
+                      placeholder="Phone"
+                      className="w-full border-b border-stone-300 bg-transparent py-1.5 text-sm text-stone-900 placeholder:text-stone-400 outline-none transition-colors focus:border-stone-900"
+                    />
+                    {quickErrors.phone && (
+                      <p className="mt-1 text-xs text-red-500">{quickErrors.phone}</p>
+                    )}
+                  </div>
+                  <div className="grid grid-cols-2 gap-3">
+                    <div>
+                      <input
+                        value={quickAddress}
+                        onChange={(e) => setQuickAddress(e.target.value)}
+                        placeholder="Address"
+                        className="w-full border-b border-stone-300 bg-transparent py-1.5 text-sm text-stone-900 placeholder:text-stone-400 outline-none transition-colors focus:border-stone-900"
+                      />
+                      {quickErrors.address && (
+                        <p className="mt-1 text-xs text-red-500">
+                          {quickErrors.address}
+                        </p>
+                      )}
+                    </div>
+                    <div>
+                      <input
+                        value={quickCity}
+                        onChange={(e) => setQuickCity(e.target.value)}
+                        placeholder="City"
+                        className="w-full border-b border-stone-300 bg-transparent py-1.5 text-sm text-stone-900 placeholder:text-stone-400 outline-none transition-colors focus:border-stone-900"
+                      />
+                      {quickErrors.city && (
+                        <p className="mt-1 text-xs text-red-500">{quickErrors.city}</p>
+                      )}
+                    </div>
+                  </div>
+                  <button
+                    type="submit"
+                    disabled={quickSubmitting}
+                    className="mt-1 w-full cursor-pointer border border-stone-900 py-2.5 text-xs font-medium tracking-[0.2em] text-stone-900 uppercase transition-colors hover:bg-stone-900 hover:text-white disabled:cursor-not-allowed disabled:opacity-50"
+                  >
+                    {quickSubmitting ? "Placing Order..." : "Place Order — Cash On Delivery"}
+                  </button>
+                </form>
+              </div>
+            )}
           </div>
         </div>
 
