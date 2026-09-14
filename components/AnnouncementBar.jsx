@@ -9,7 +9,7 @@ const notoSans = Noto_Sans({
 
 const messages = [
   "Complimentary Shipping On Orders Over $75",
-  "New Summer 2026 Collection Now Live",
+  "New Winter 2026 Collection Now Live",
 ];
 
 const REPEAT = 2;

@@ -8,7 +8,7 @@ const notoSans = Noto_Sans({
 });
 
 const messages = [
-  "New Summer 2026 Collection",
+  "New Winter 2026 Collection",
   "Free Shipping On All Orders",
   "Crafted For You",
 ];
