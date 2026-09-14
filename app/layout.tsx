@@ -19,10 +19,15 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
+const siteUrl = "https://histora.vercel.app";
+
 export const metadata: Metadata = {
-  title: "Histora – Clothing, Mugs & Wall Art",
+  title: {
+    default: "Histora – Clothing, Mugs & Wall Art",
+    template: "%s | Histora",
+  },
   description:
-    "Discover unique clothing, stylish mugs, and modern wall art. Every product tells a story. Shop high-quality lifestyle pieces designed to inspire.",
+    "Discover unique clothing, stylish mugs, and modern wall art from Histora. Every product tells a story. Shop high-quality lifestyle pieces designed to inspire.",
 
   keywords: [
     "clothing store",
@@ -32,22 +37,28 @@ export const metadata: Metadata = {
     "fashion",
     "lifestyle brand",
     "unique designs",
+    "Morocco streetwear",
   ],
 
   authors: [{ name: "Histora" }],
   creator: "Histora",
+  publisher: "Histora",
+
+  alternates: {
+    canonical: "/",
+  },
 
   openGraph: {
     title: "Histora – Every Product Tells a Story",
     description:
       "Shop clothing, mugs, and artistic wall decor crafted with style and meaning.",
-    url: "https://yourdomain.com",
+    url: siteUrl,
     siteName: "Histora",
     images: [
       {
-        url: "/og-image.jpg", // put in /public
-        width: 1200,
-        height: 630,
+        url: "/og-image.png",
+        width: 1808,
+        height: 870,
         alt: "Histora Store",
       },
     ],
@@ -60,10 +71,22 @@ export const metadata: Metadata = {
     title: "Histora Store",
     description:
       "Clothing, mugs, and wall art that bring style to your everyday life.",
-    images: ["/og-image.jpg"],
+    images: ["/og-image.png"],
   },
 
-  metadataBase: new URL("https://yourdomain.com"),
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-snippet": -1,
+      "max-image-preview": "large",
+      "max-video-preview": -1,
+    },
+  },
+
+  metadataBase: new URL(siteUrl),
 };
 export default function RootLayout({
   children,
