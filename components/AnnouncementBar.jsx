@@ -20,7 +20,7 @@ function AnnouncementBar() {
     .join("   •   ");
 
   return (
-    <div className="fixed top-0 right-0 left-0 z-60 h-9 overflow-hidden border-b border-white/10 bg-stone-950">
+    <div className="fixed top-0 right-0 left-0 z-40 h-9 overflow-hidden border-b border-white/10 bg-stone-950">
       <div
         className={`${notoSans.className} flex h-full w-max animate-marquee items-center whitespace-nowrap text-[11px] tracking-[0.25em] text-white/70 uppercase`}
       >

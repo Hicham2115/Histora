@@ -5,6 +5,7 @@ import Image from "next/image";
 import { useEffect, useMemo, useState, type MouseEvent } from "react";
 import { Heart, Minus, Plus, ZoomIn } from "lucide-react";
 import { Noto_Sans } from "next/font/google";
+import { Skeleton } from "@/components/ui/skeleton";
 import { useStore } from "@/components/store/useStore";
 import { useProduct } from "@/hooks/use-product";
 import { useProducts } from "@/hooks/use-products";
@@ -102,10 +103,43 @@ export default function ProductPage() {
 
   if (isPending) {
     return (
-      <div className="flex min-h-screen items-center justify-center">
-        <p className="text-sm tracking-[0.2em] text-stone-400 uppercase">
-          Loading...
-        </p>
+      <div
+        className={`${notoSans.className} min-h-screen px-4 pt-28 pb-24 sm:px-6 md:px-8 lg:pt-36`}
+      >
+        <div className="mx-auto max-w-6xl">
+          <Skeleton className="mb-8 h-3 w-56 rounded-none" />
+
+          <div className="grid grid-cols-1 gap-6 lg:grid-cols-[1fr_96px_400px] lg:items-start">
+            <Skeleton className="aspect-4/5 w-full rounded-none" />
+
+            <div className="flex flex-row gap-2 overflow-x-auto pb-1 lg:flex-col lg:overflow-visible lg:pb-0">
+              {Array.from({ length: 4 }).map((_, i) => (
+                <Skeleton
+                  key={i}
+                  className="aspect-square w-16 shrink-0 rounded-none sm:w-20 lg:w-full"
+                />
+              ))}
+            </div>
+
+            <div className="flex flex-col gap-4">
+              <Skeleton className="h-4 w-2/3 rounded-none" />
+              <Skeleton className="h-7 w-1/3 rounded-none" />
+              <Skeleton className="h-3 w-1/4 rounded-none" />
+              <div className="flex flex-col gap-2 border-b border-stone-100 pb-6">
+                <Skeleton className="h-3 w-full rounded-none" />
+                <Skeleton className="h-3 w-full rounded-none" />
+                <Skeleton className="h-3 w-2/3 rounded-none" />
+              </div>
+              <Skeleton className="h-3 w-16 rounded-none" />
+              <div className="flex gap-2">
+                {Array.from({ length: 4 }).map((_, i) => (
+                  <Skeleton key={i} className="h-11 w-11 rounded-none" />
+                ))}
+              </div>
+              <Skeleton className="mt-4 h-13 w-full rounded-none" />
+            </div>
+          </div>
+        </div>
       </div>
     );
   }
