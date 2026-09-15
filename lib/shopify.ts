@@ -197,6 +197,7 @@ type ShopifyProductNode = {
   description: string;
   descriptionHtml: string;
   productType: string;
+  category: { name: string } | null;
   availableForSale: boolean;
   images: { edges: { node: { url: string } }[] };
   options: ShopifyOption[];
@@ -221,7 +222,7 @@ function mapProduct(node: ShopifyProductNode): Product {
     image: node.images.edges.map((edge) => edge.node.url).join(","),
     color: findOptionValues(node.options, "color"),
     size: findOptionValues(node.options, "size"),
-    category: node.productType || "Uncategorized",
+    category: node.category?.name || node.productType || "Uncategorized",
     in_stock: node.availableForSale ? "true" : "false",
   };
 }
@@ -235,6 +236,9 @@ const PRODUCT_FIELDS = `
   description
   descriptionHtml
   productType
+  category {
+    name
+  }
   availableForSale
   images(first: 20) {
     edges { node { url } }

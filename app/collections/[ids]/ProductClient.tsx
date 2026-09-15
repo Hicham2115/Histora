@@ -23,7 +23,7 @@ const notoSans = Noto_Sans({
   weight: ["300", "400", "500"],
 });
 
-const ALL_SIZES = ["XS", "S", "M", "L", "XL", "2X"];
+const ALL_SIZES = ["S", "M", "L", "XL", "2XL"];
 
 const COLOR_MAP: Record<string, string> = {
   Green: "#7ecbb4",
